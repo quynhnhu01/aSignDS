@@ -7,83 +7,83 @@ import styles from "./grid.module.css";
 import CONSTANTS from "../../constants";
 
 export default class Grid extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      gridTextAssets: [{ description: "", header: "", id: 0 }],
-      WarningMessageOpen: false,
-      WarningMessageText: ""
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            gridTextAssets: [{ description: "", header: "", id: 0 }],
+            WarningMessageOpen: false,
+            WarningMessageText: ""
+        };
 
-    this.handleWarningClose = this.handleWarningClose.bind(this);
-  }
+        this.handleWarningClose = this.handleWarningClose.bind(this);
+    }
 
-  // Get the text sample data from the back end
-  componentDidMount() {
-    fetch(CONSTANTS.ENDPOINT.GRID)
-      .then(response => {
-        if (!response.ok) {
-          throw Error(response.statusText);
-        }
-        return response.json();
-      })
-      .then(result => this.setState({ gridTextAssets: result }))
-      .catch(error =>
+    // Get the text sample data from the back end
+    componentDidMount() {
+        fetch(CONSTANTS.ENDPOINT.GRID)
+            .then(response => {
+                if (!response.ok) {
+                    throw Error(response.statusText);
+                }
+                return response.json();
+            })
+            .then(result => this.setState({ gridTextAssets: result }))
+            .catch(error =>
+                this.setState({
+                    WarningMessageOpen: true,
+                    WarningMessageText: `Request to get grid text failed: ${error}`
+                })
+            );
+    }
+
+    handleWarningClose() {
         this.setState({
-          WarningMessageOpen: true,
-          WarningMessageText: `Request to get grid text failed: ${error}`
-        })
-      );
-  }
+            WarningMessageOpen: false,
+            WarningMessageText: ""
+        });
+    }
 
-  handleWarningClose() {
-    this.setState({
-      WarningMessageOpen: false,
-      WarningMessageText: ""
-    });
-  }
+    handleButtonUploadClick = evt => {
+        const reader = new FileReader();
+        
+    }
 
-  render() {
-    const {
-      gridTextAssets,
-      WarningMessageOpen,
-      WarningMessageText
-    } = this.state;
-    return (
-      <main id="mainContent">
-        <div className={classnames("text-center", styles.header)}>
-          <h1>aSignDS</h1>
-          <p>This is placeholder text. Your web app description goes here.</p>
-          <a
-            href="https://github.com/Microsoft/WebTemplateStudio"
-            className="btn btn-primary my-2"
-          >
-            Link to our Github
-          </a>
-        </div>
+    render() {
+        const {
+            gridTextAssets,
+            WarningMessageOpen,
+            WarningMessageText
+        } = this.state;
+        return (
+            <main id="mainContent">
+                <div className={classnames("text-center", styles.header, styles.gradientGrid)}>
+                    <h1>aSignDS</h1>
+                    <p>Auto Sign with Digital Signature and Manage your document.</p>
+                    <button className="btn btn-primary my-2" onClick={(e) => this.handleButtonUploadClick(e)}>Upload Your Document</button>
+                </div>
 
-        <div className="container">
-          <div className="row justify-content-center py-5">
-            <h1>Bootstrap Grid Template</h1>
-          </div>
+                <div className="container">
+                    <div className="row justify-content-center py-5">
+                        <h1>Features</h1>
+                    </div>
 
-          <div className="row justify-content-around text-center pb-5">
-            {gridTextAssets.map(textAssets => (
-              <GridComponent
-                key={textAssets.id}
-                header={textAssets.title}
-                description={textAssets.shortDescription}
-                image={GreyBox}
-              />
-            ))}
-          </div>
-        </div>
-        <WarningMessage
-          open={WarningMessageOpen}
-          text={WarningMessageText}
-          onWarningClose={this.handleWarningClose}
-        />
-      </main>
-    );
-  }
+                    <div className="row justify-content-around text-center pb-5">
+                        {gridTextAssets.map(textAssets => (
+                            <GridComponent
+                                key={textAssets.id}
+                                header={textAssets.title}
+                                description={textAssets.shortDescription}
+                                image={GreyBox}
+                            />
+                        ))}
+                    </div>
+                </div>
+                <WarningMessage
+                    open={WarningMessageOpen}
+                    text={WarningMessageText}
+                    onWarningClose={this.handleWarningClose}
+                />
+            </main>
+        );
+    }
 }
