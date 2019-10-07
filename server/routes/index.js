@@ -2,12 +2,15 @@
 const express = require("express");
 const sampleData = require("../sampleData");
 
+const userRouter = require("./user");
 
-const router = express.Router();
+const gridRouter = express.Router();
 // Grid Page Endpoint
-router.get(CONSTANTS.ENDPOINT.GRID, (req, res) => {
-  res.json(sampleData.textAssets);
+gridRouter.get(CONSTANTS.ENDPOINT.GRID, (req, res) => {
+    res.json(sampleData.textAssets);
 });
 
-
-module.exports = router;
+const ROUTER = {};
+ROUTER.userRouter = userRouter;
+ROUTER.gridRouter = gridRouter;
+module.exports = ROUTER;
