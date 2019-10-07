@@ -16,8 +16,8 @@ export default function NavBar() {
                 </Link>
                 <div className="navbar-nav">
                     <Link className="nav-item nav-link active" to="/">Home</Link>
-                    <Link className="nav-item nav-link active" to="/">Login</Link>
-                    <Link className="nav-item nav-link active" to="/">About</Link>
+                    <Link className="nav-item nav-link active" to="/login">Login</Link>
+                    <Link className="nav-item nav-link active" to="/about">About</Link>
                 </div>
             </nav>
         </React.Fragment>

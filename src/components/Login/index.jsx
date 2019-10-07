@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import CONSTANTS from '../../constants';
 import Aux from '../../HOC/aux';
+import LoginForm from './LoginForm';
 export default class Login extends Component {
     constructor(props) {
         super(props);
@@ -24,9 +25,9 @@ export default class Login extends Component {
     render() {
         return (
             <Aux>
-                <div>
-                    login form
-                </div>
+                <main className="mainLogin" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <LoginForm />
+                </main>
             </Aux>
         )
     }

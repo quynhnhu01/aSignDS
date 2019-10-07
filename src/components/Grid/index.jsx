@@ -44,8 +44,7 @@ export default class Grid extends Component {
     }
 
     handleButtonUploadClick = evt => {
-        const reader = new FileReader();
-        
+        alert("Upload button clicked");       
     }
 
     render() {

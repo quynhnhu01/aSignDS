@@ -3,9 +3,9 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-
-import Grid from "./components/Grid";
 import Login from "./components/Login";
+import Grid from "./components/Grid";
+import About from "./components/About";
 //TODO Web Template Studio: Add routes for your new pages here.
 class App extends Component {
     render() {
@@ -15,6 +15,10 @@ class App extends Component {
                 <Switch>
                     <Redirect exact path="/" to="/Grid" />
                     <Route path="/Grid" component={Grid} />
+                    <Redirect exact path="/" to="/login" />
+                    <Route path="/login" component={Login} />
+                    <Redirect exact path="/" to="/about" />
+                    <Route path="/Grid" component={About} />
                 </Switch>
                 <Footer />
             </React.Fragment>
