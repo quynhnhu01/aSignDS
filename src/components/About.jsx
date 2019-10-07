@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Aux from '../HOC/aux';
+import Aux from '../HOC/auxiliary';
 export default class About extends Component {
     constructor(props) {
         super(props);

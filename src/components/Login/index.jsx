@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import CONSTANTS from '../../constants';
-import Aux from '../../HOC/aux';
+import Aux from '../../HOC/auxiliary';
 import LoginForm from './LoginForm';
 export default class Login extends Component {
     constructor(props) {
