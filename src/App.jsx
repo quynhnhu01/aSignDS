@@ -5,20 +5,21 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 
 import Grid from "./components/Grid";
+import Login from "./components/Login";
 //TODO Web Template Studio: Add routes for your new pages here.
 class App extends Component {
-  render() {
-    return (
-      <React.Fragment>
-        <NavBar />
-        <Switch>
-          <Redirect exact path = "/" to = "/Grid" />
-          <Route path = "/Grid" component = { Grid } />
-        </Switch>
-        <Footer />
-      </React.Fragment>
-    );
-  }
+    render() {
+        return (
+            <React.Fragment>
+                <NavBar />
+                <Switch>
+                    <Redirect exact path="/" to="/Grid" />
+                    <Route path="/Grid" component={Grid} />
+                </Switch>
+                <Footer />
+            </React.Fragment>
+        );
+    }
 }
 
 export default App;
