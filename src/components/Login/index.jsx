@@ -25,9 +25,9 @@ export default class Login extends Component {
     render() {
         return (
             <Aux>
-                <main className="mainLogin" style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="mainLogin">
                     <LoginForm />
-                </main>
+                </div>
             </Aux>
         )
     }

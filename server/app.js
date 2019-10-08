@@ -3,11 +3,15 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const mongoose = require("mongoose");
+const { URI } = require("./constants");
 
 const { userRouter, gridRouter } = require("./routes/index");
 
 const app = express();
-
+mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+    if (!err) console.log("Connected to MongoDB");
+});
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
