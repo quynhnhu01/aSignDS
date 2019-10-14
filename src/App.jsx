@@ -18,9 +18,13 @@ class App extends Component {
                     <Route path="/Grid" component={Grid} />
                     <Redirect exact path="/" to="/login" />
                     <Route path="/login" component={Login} />
+                    <Redirect exact path="/" to="/register" />
                     <Route path="/register" component={Register} />
                     <Redirect exact path="/" to="/about" />
                     <Route path="/about" component={About} />
+                    <button onClick={(e) => {
+                        window.sessionStorage.removeItem("access_token");
+                    }}>Clear access_token</button>
                 </Switch>
             </DefaultLayout>
         );

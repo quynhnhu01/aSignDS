@@ -13,9 +13,9 @@ export default function LoginForm(props) {
             <div className="col-md-3" >
                 <h3>Login to service</h3>
                 <hr />
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-user"></i> </span>
                     </div>
                     <input
                         value={username}
@@ -27,11 +27,11 @@ export default function LoginForm(props) {
                         required
                     />
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
                     </div>
-                    {/* <input class="form-control" placeholder="Create password" type="password" /> */}
+                    {/* <input className="form-control" placeholder="Create password" type="password" /> */}
                     <input
                         type="password"
                         className="form-control"
@@ -41,10 +41,10 @@ export default function LoginForm(props) {
                         required
                     />
                 </div>
-                <div class="form-group">
-                    <button onClick={() => props.login(username, password)} type="submit" class="btn btn-primary btn-block"> Login  </button>
+                <div className="form-group">
+                    <button onClick={() => props.login(username, password)} type="submit" className="btn btn-primary btn-block"> Login  </button>
                 </div>
-                <p class="text-center">Or create a new account?
+                <p className="text-center">Or create a new account?
                     <Link className="nav-item nav-link active" to="/register">Register</Link>
                 </p>
             </div>
