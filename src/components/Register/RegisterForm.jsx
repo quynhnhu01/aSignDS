@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 function checkPasswordConfirm(password, passwordConfirm) {
-    console.log("validate password ok");
     return password === passwordConfirm;
 }
 export default function RegisterForm(props) {
@@ -9,45 +8,72 @@ export default function RegisterForm(props) {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [phone, setPhone] = useState("");
     return (
         <div style={{ justifyContent: 'center', display: 'flex', margin: '5px', alignItems: 'center' }} >
             <div className="col-md-3" >
                 <h3>Register new account</h3>
                 <hr />
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-user"></i> </span>
                     </div>
-                    <input name="" class="form-control" placeholder="Full name" type="text" />
+                    <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="form-control" placeholder="Full name" type="text" />
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-user"></i> </span>
                     </div>
-                    <input name="" class="form-control" placeholder="Email address" type="email" />
+                    <input value={username} onChange={(e) => setUsername(e.target.value)} className="form-control" placeholder="Username" type="text" />
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-envelope"></i> </span>
                     </div>
-                    <input name="" class="form-control" placeholder="Phone number" type="text" />
+                    <input value={email} onChange={(e) => setEmail(e.target.value)} className="form-control" placeholder="Email address" type="email" />
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-phone"></i> </span>
                     </div>
-                    <input class="form-control" placeholder="Create password" type="password" />
+                    <input value={phone} onChange={(e) => setPhone(e.target.value)} className="form-control" placeholder="Phone number" type="text" />
                 </div>
-                <div class="form-group input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
                     </div>
-                    <input class="form-control" placeholder="Repeat password" type="password" />
+                    <input value={password} onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Create password" type="password" />
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary btn-block"> Create Account  </button>
+                <div className="form-group input-group">
+                    <div className="input-group-prepend">
+                        <span className="input-group-text"> <i className="fa fa-lock"></i> </span>
+                    </div>
+                    <input value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)}
+                        className="form-control" placeholder="Repeat password" type="password"
+                        onBlur={(e) => checkPasswordConfirm(password, e.target.value)}
+                    />
                 </div>
-                <p class="text-center">Have an account? <Link className="nav-item nav-link active" to="/login">Login</Link> </p>
+                <div className="form-group">
+                    <button type="submit" className="btn btn-primary btn-block"
+                        onClick={(e) => {
+                            const isMatch = checkPasswordConfirm(password, passwordConfirm)
+                            if (!isMatch) {
+                                alert("Wrong repeat password");
+                                return;
+                            };
+                            const user = {
+                                username: username,
+                                email: email,
+                                fullName: fullName,
+                                password: password,
+                                phone: phone,
+                            }
+                            props.register(user);
+                        }}
+                    > Create Account  </button>
+                </div>
+                <p className="text-center">Have an account? <Link className="nav-item nav-link active" to="/login">Login</Link> </p>
             </div>
         </ div>
     )
