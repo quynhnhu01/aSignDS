@@ -17,8 +17,10 @@ export default function NavBar() {
                 <div className="navbar-nav">
                     <Link className="nav-item nav-link active" to="/">Home</Link>
                     <Link className="nav-item nav-link active" to="/login">Login</Link>
+                    <Link className="nav-item nav-link active" to="/register">Register</Link>
                     <Link className="nav-item nav-link active" to="/about">About</Link>
                     <Link className="nav-item nav-link active" to="/upload">Upload</Link>
+                    <Link className="nav-item nav-link active" to="/logout">Logout</Link>
                 </div>
             </nav>
         </React.Fragment>
