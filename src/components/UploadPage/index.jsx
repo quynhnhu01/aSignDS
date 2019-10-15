@@ -36,7 +36,7 @@ class UploadPage extends Component {
           <button onClick={this.goToPrevPage}>Prev</button>
           <button onClick={this.goToNextPage}>Next</button>
         </nav>
-         <input type="file" name="avatar" accept='.pdf'  onChange={this.fileChangedHandler} />
+         <input type="file" accept='.pdf'  onChange={this.fileChangedHandler} />
          <div>
         <Document
           file={selectedFile}
