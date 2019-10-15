@@ -5,7 +5,7 @@ const { checkAuth } = require('../middlewares/authenticated');
 routerUser.get('/users', (req, res) => {
     return userController.getUser(req, res);
 });
-routerUser.post('/users', (req, res) => {
+routerUser.post('/register', (req, res) => {
     return userController.register(req, res);
 });
 routerUser.post('/login', (req, res) => {
