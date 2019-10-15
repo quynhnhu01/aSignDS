@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Grid from "./components/Grid";
 import About from "./components/About";
+import UploadPage from "./components/UploadPage"
 import { DefaultLayout } from "./layouts/default";
 //TODO Web Template Studio: Add routes for your new pages here.
 class App extends Component {
@@ -19,6 +20,8 @@ class App extends Component {
                     <Route path="/login" component={Login} />
                     <Redirect exact path="/" to="/about" />
                     <Route path="/about" component={About} />
+                    <Redirect exact path="/" to="/upload" />
+                    <Route path="/upload" component={UploadPage} />
                 </Switch>
             </DefaultLayout>
         );
