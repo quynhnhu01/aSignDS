@@ -26,15 +26,11 @@ class App extends Component {
                     <Route path="/about" component={About} />
                     <Redirect exact path="/" to="/upload" />
                     <Route path="/upload" component={UploadPage} />
-<<<<<<< HEAD
                     <Redirect exact path="/" to="/profile" />
                     <Route path="/profile" component={UserProfilePage} />
-                    
-=======
                     <button onClick={(e) => {
                         window.sessionStorage.removeItem("access_token");
                     }}>Clear access_token</button>
->>>>>>> a446c71c1838254f1782ed4e90d007fa62a459e3
                 </Switch>
             </DefaultLayout>
         );

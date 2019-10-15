@@ -20,11 +20,8 @@ export default function NavBar() {
                     <Link className="nav-item nav-link active" to="/register">Register</Link>
                     <Link className="nav-item nav-link active" to="/about">About</Link>
                     <Link className="nav-item nav-link active" to="/upload">Upload</Link>
-<<<<<<< HEAD
-                    <Link className="nav-item nav-link active" to="/profile">Profile</Link>
-=======
                     <Link className="nav-item nav-link active" to="/logout">Logout</Link>
->>>>>>> a446c71c1838254f1782ed4e90d007fa62a459e3
+                    <Link className="nav-item nav-link active" to="/profile">Profile</Link>
                 </div>
             </nav>
         </React.Fragment>
