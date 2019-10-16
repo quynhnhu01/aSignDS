@@ -44,7 +44,7 @@ export default class Grid extends Component {
     }
 
     handleButtonUploadClick = evt => {
-        alert("Upload button clicked");       
+        alert("Upload button clicked");
     }
 
     render() {
