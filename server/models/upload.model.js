@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const uploadSchema = mongoose.Schema({
+const contractSchema = mongoose.Schema({
     nameContract: String,
     owner: String,
     parner: String,
@@ -8,5 +8,5 @@ const uploadSchema = mongoose.Schema({
     createdAt: String,
     updatedAt: String,
 });
-const uploadModel = mongoose.model("upload", uploadSchema);
-module.exports = uploadModel;
+const contractModel = mongoose.model("upload", contractSchema);
+module.exports = contractModel;
