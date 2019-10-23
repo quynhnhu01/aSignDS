@@ -1,0 +1,19 @@
+.UserProfile__page {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    
+  &--table {
+    grid-column: 1/ span 2 ;
+    grid-row: 1;
+    border: 1px solid gray;
+    border-radius: 10px;
+  }
+
+  &--profile {
+    grid-column: 3;
+    grid-row: 1;
+    border: 1px solid gray;
+    border-radius: 10px;
+  }
+}

@@ -6,7 +6,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const { URI } = require("./constants");
 
-const { userRouter, gridRouter, emailRouter } = require("./routes/index");
+const { userRouter, gridRouter, emailRouter ,uploadRouter} = require("./routes/index");
 
 const app = express();
 mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
@@ -21,6 +21,7 @@ app.use(express.static(path.resolve(__dirname, "build")));
 app.use("/api", gridRouter);
 app.use("/user", userRouter);
 app.use("/", emailRouter);
+app.use("/upload", uploadRouter);
 app.get("*", (req, res) => {
     res.sendFile("build/index.html", { root: __dirname });
 });
