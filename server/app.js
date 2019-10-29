@@ -4,6 +4,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const { URI } = require("./constants");
 
 const { userRouter, uploadRouter, gridRouter } = require("./routes/index");
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, "build")));
+app.use(cors());
 
 app.use("/api", gridRouter);
 app.use("/user", userRouter);
