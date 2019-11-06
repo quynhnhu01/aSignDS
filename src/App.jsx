@@ -10,7 +10,9 @@ import UploadPage from "./components/UploadPage"
 import UserProfilePage from "./components/UserProfilePage"
 import { DefaultLayout } from "./layouts/default";
 import Register from "./components/Register";
-//TODO Web Template Studio: Add routes for your new pages here.
+import { PrivateRoute } from "./helpers/PrivateRoute";
+const accessToken = window.sessionStorage.getItem("access_token");
+const isAuthenticated = accessToken !== null && accessToken.length > 0;
 class App extends Component {
     render() {
         return (
@@ -27,7 +29,8 @@ class App extends Component {
                     <Redirect exact path="/" to="/upload" />
                     <Route path="/upload" component={UploadPage} />
                     <Redirect exact path="/" to="/profile" />
-                    <Route path="/profile" component={UserProfilePage} />
+                    {/* <Route path="/profile" component={UserProfilePage} /> */}
+                    <PrivateRoute path="/profile" authenticated={isAuthenticated} component={UserProfilePage} />
                     <button onClick={(e) => {
                         window.sessionStorage.removeItem("access_token");
                     }}>Clear access_token</button>
