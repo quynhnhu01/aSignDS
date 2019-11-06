@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import CONSTANTS from '../../constants';
 import Aux from '../../HOC/auxiliary';
@@ -13,7 +14,8 @@ export default class Login extends Component {
             uuid: "",
             isAuthenticated: false,
             WarningMessageOpen: false,
-            WarningMessageText: ""
+            WarningMessageText: "",
+            redirectToRefer: false,
         }
     };
     componentDidMount() {
@@ -29,11 +31,18 @@ export default class Login extends Component {
             password: password
         });
         const { data } = response;
-        console.log("response from server:", response.data.success);
+        console.log("response from server:", response.data);
         if (typeof data.username !== "undefined") {
             console.log("login successful");
-            this.setState({ username: data.username, token: data.token, isAuthenticated: true, WarningMessageOpen: false });
+            this.setState({
+                username: data.username,
+                token: data.token,
+                isAuthenticated: true,
+                WarningMessageOpen: false,
+                redirectToRefer: true
+            });
             window.sessionStorage.setItem("access_token", data.token);
+
         }
         else {
             this.setState({ WarningMessageOpen: true, WarningMessageText: response.data.message });
@@ -46,7 +55,12 @@ export default class Login extends Component {
         });
     }
     render() {
-        const { WarningMessageOpen, WarningMessageText } = this.state;
+        const { WarningMessageOpen, WarningMessageText, redirectToRefer } = this.state;
+        if (redirectToRefer) {
+            const { from } = this.props.location.state;
+            console.log("from: ", from);
+            return (<Redirect to={from} />)
+        }
         return (
             <Aux>
                 <div className="mainLogin">
