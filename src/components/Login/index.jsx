@@ -52,7 +52,10 @@ export default class Login extends Component {
     }
     render() {
         const { MessageOpen, MessageText } = this.state;
-        return (
+        const { user } = this.context;
+        console.log(user);
+        
+        return !user ? (
             <Aux>
                 <div className="mainLogin">
                     <LoginForm login={this.handleLogin} />
@@ -66,6 +69,6 @@ export default class Login extends Component {
                     } />
                 </div>
             </Aux>
-        )
+        ) : <Redirect to={'/'} />
     }
 }
