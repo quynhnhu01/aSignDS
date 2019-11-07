@@ -1,7 +1,7 @@
 ﻿import React, { Component } from "react";
 import classnames from "classnames";
 import GridComponent from "./GridComponent";
-import WarningMessage from "../WarningMessage";
+import AlertMessage from "../AlertMessage";
 import GreyBox from "../../images/GreyBox.svg";
 import styles from "./grid.module.css";
 import CONSTANTS from "../../constants";
@@ -11,11 +11,11 @@ export default class Grid extends Component {
         super(props);
         this.state = {
             gridTextAssets: [{ description: "", header: "", id: 0 }],
-            WarningMessageOpen: false,
-            WarningMessageText: ""
+            MessageOpen: false,
+            MessageText: ""
         };
 
-        this.handleWarningClose = this.handleWarningClose.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     // Get the text sample data from the back end
@@ -30,16 +30,16 @@ export default class Grid extends Component {
             .then(result => this.setState({ gridTextAssets: result }))
             .catch(error =>
                 this.setState({
-                    WarningMessageOpen: true,
-                    WarningMessageText: `Request to get grid text failed: ${error}`
+                    MessageOpen: true,
+                    MessageText: `Request to get grid text failed: ${error}`
                 })
             );
     }
 
-    handleWarningClose() {
+    handleClose() {
         this.setState({
-            WarningMessageOpen: false,
-            WarningMessageText: ""
+            MessageOpen: false,
+            MessageText: ""
         });
     }
 
@@ -50,8 +50,8 @@ export default class Grid extends Component {
     render() {
         const {
             gridTextAssets,
-            WarningMessageOpen,
-            WarningMessageText
+            MessageOpen,
+            MessageText
         } = this.state;
         return (
             <main id="mainContent">
@@ -77,10 +77,11 @@ export default class Grid extends Component {
                         ))}
                     </div>
                 </div>
-                <WarningMessage
-                    open={WarningMessageOpen}
-                    text={WarningMessageText}
-                    onWarningClose={this.handleWarningClose}
+                <AlertMessage
+                    open={MessageOpen}
+                    text={MessageText}
+                    onClose={this.handleClose}
+                    type='warning'
                 />
             </main>
         );

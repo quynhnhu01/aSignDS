@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from "react-router-dom";
 function checkPasswordConfirm(password, passwordConfirm) {
     return password === passwordConfirm;
@@ -10,6 +10,10 @@ export default function RegisterForm(props) {
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [fullName, setFullName] = useState("");
     const [phone, setPhone] = useState("");
+    const inputElementRef = useRef(null);
+    useEffect(() => {
+        inputElementRef.current.focus();
+    }, []);
     return (
         <div style={{ justifyContent: 'center', display: 'flex', margin: '5px', alignItems: 'center' }} >
             <div className="col-md-3" >
@@ -19,7 +23,14 @@ export default function RegisterForm(props) {
                     <div className="input-group-prepend">
                         <span className="input-group-text"> <i className="fa fa-user"></i> </span>
                     </div>
-                    <input value={fullName} onChange={(e) => setFullName(e.target.value)} className="form-control" placeholder="Full name" type="text" />
+                    <input
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="form-control"
+                        placeholder="Full name"
+                        type="text"
+                        ref={inputElementRef}
+                    />
                 </div>
                 <div className="form-group input-group">
                     <div className="input-group-prepend">

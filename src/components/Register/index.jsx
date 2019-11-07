@@ -1,39 +1,41 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import RegisterForm from './RegisterForm';
-import CONSTANTS from '../../constants';
-import Axios from 'axios';
+
 import If from '../../helpers/If';
 import Aux from '../../HOC/auxiliary';
-import WarningMessage from '../WarningMessage';
-export default class Register extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: "",
-            uuid: "",
-            isAuthenticated: false,
-            WarningMessageOpen: false,
-            WarningMessageText: ""
+import AlertMessage from '../AlertMessage';
+import { register } from '../../services/authen.service';
+
+export default function Register(props) {
+    const [MessageOpen, setMessageOpen] = useState(false);
+    const [MessageText, setMessageText] = useState('');
+    const [MessageType, setMessageType] = useState('');
+    const handleRegister = async user => {
+        const response = await register(user)
+        const { message, error, success } = response.data;
+        const typeAlert = error || !success ? 'warning' : 'success';
+        setMessageType(typeAlert);
+        setMessageOpen(true);
+        setMessageText(message);
+        if (typeAlert === 'success') {
+            props.history.push('/login');
         }
-    };
-    handleRegister = async (user) => {
-        const response = await Axios.post(CONSTANTS.ENDPOINT.REGISTER, { ...user });
-        console.log(response);
-        const { data } = response;
     }
-    render() {
-        const { WarningMessageOpen, WarningMessageText } = this.state;
-        return (
-            <Aux>
-                <RegisterForm register={this.handleRegister} />
-                <If condition={WarningMessageOpen} component={WarningMessage} props={
-                    {
-                        open: WarningMessageOpen,
-                        text: WarningMessageText,
-                        onWarningClose: this.handleWarningClose
-                    }
-                } />
-            </Aux>
-        )
+    const handleClose = () => {
+        setMessageOpen(false);
+        setMessageText('');
     }
+    return (
+        <Aux>
+            <RegisterForm register={handleRegister} />
+            <If condition={MessageOpen} component={AlertMessage} props={
+                {
+                    open: MessageOpen,
+                    text: MessageText,
+                    onClose: handleClose,
+                    type: MessageType
+                }
+            } />
+        </Aux>
+    )
 }

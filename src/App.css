@@ -6,6 +6,8 @@
 body {
   margin-bottom: 160px !important; /* Height of the footer */
   padding: 0;
+  background: linear-gradient(to bottom right, #669999 3%, #999966 130%);
+
 }
 
 footer {
@@ -13,6 +15,8 @@ footer {
   bottom: 0;
   width: 100%;
   height: 160px; /* Set the fixed height of the footer here */
+  background: linear-gradient(to bottom right, #006699 3%, #666633 130%);
+
 }
 
 /* Override Bootstrap Styling */
@@ -26,3 +30,7 @@ button:active {
   outline: none !important;
   box-shadow: none !important;
 }
+.show>.dropdown-menu {
+    display: block;
+    position: absolute;
+  }
