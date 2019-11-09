@@ -1,3 +1,4 @@
+import "../UploadPage/index.scss"
 import React, { Component } from 'react';
 import { Document, Page } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -33,11 +34,8 @@ class UploadPage extends Component {
 
         return (
             <div className="App">
-                <nav>
-                    <button onClick={this.goToPrevPage}>Prev</button>
-                    <button onClick={this.goToNextPage}>Next</button>
-                </nav>
-                <input type="file" name="avatar" accept='.pdf' onChange={this.fileChangedHandler} />
+               <div className="App__document">
+               <input type="file" name="avatar" accept='.pdf' onChange={this.fileChangedHandler} />
                 <div>
                     <Document
                         file={selectedFile}
@@ -46,6 +44,15 @@ class UploadPage extends Component {
                         <Page pageNumber={pageNumber} />
                     </Document>
                     <p>Page {pageNumber} of {numPages}</p>
+                </div>
+                <nav>
+                    <button onClick={this.goToPrevPage}>Prev</button>
+                    <button onClick={this.goToNextPage}>Next</button>
+                </nav>
+               </div>
+                <div className="App__signature">
+                    <input type="file" accept=".jepg"/>
+                    
                 </div>
             </div>
         );

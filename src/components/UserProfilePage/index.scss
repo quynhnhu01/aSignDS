@@ -8,6 +8,30 @@
     grid-row: 1;
     border: 1px solid gray;
     border-radius: 10px;
+    text-align: center;
+
+    &__action {
+      display: flex;
+      justify-content: center;
+      
+      &-edit {
+        margin: 0.4rem 0;
+      }
+
+      &-add {
+        margin: 0.4rem;
+      }
+      
+      &-delete {
+        margin: 0.4rem;
+      }
+      img {
+        height: 20px;
+        width: 20px;
+      }
+      
+      
+    }
   }
 
   &--profile {
@@ -15,5 +39,7 @@
     grid-row: 1;
     border: 1px solid gray;
     border-radius: 10px;
+    text-align: center;
   }
+  
 }

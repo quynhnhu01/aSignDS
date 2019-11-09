@@ -1,0 +1,15 @@
+.App {
+    display: grid;
+    margin: 0  5rem;
+    grid-template-columns: 1fr 500px;
+    grid-template-rows: 1fr;
+    grid-gap: 10px;
+
+    &__document {
+        grid-column: 1 / span 1;
+    }
+
+    &__singature {
+        grid-column: 2/ span 1;
+    }
+}
