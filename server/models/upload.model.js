@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const contractSchema = mongoose.Schema({
+    ID: String,
     nameContract: String,
     owner: String,
     partner: String,
