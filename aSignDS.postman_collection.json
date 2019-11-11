@@ -6,115 +6,278 @@
 	},
 	"item": [
 		{
-			"name": "Get Users",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}:3001/user/users",
-					"host": [
-						"{{url}}"
-					],
-					"port": "3001",
-					"path": [
-						"user",
-						"users"
-					]
+			"name": "Users",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "abc123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}:3001/user/login",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "abc123",
+									"type": "text"
+								},
+								{
+									"key": "dob",
+									"value": "02/03/1998",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "Administrator",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}:3001/user/users",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"user",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:3001/user/users",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"user",
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Create User",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "abc123",
-							"type": "text"
-						},
-						{
-							"key": "dob",
-							"value": "02/03/1998",
-							"type": "text"
-						},
-						{
-							"key": "fullname",
-							"value": "Administrator",
-							"type": "text"
+			"name": "Contract",
+			"item": [
+				{
+					"name": "Get contract",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:3001/contract/",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"contract",
+								""
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{url}}:3001/user/users",
-					"host": [
-						"{{url}}"
-					],
-					"port": "3001",
-					"path": [
-						"user",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Login",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/x-www-form-urlencoded",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "text"
+				{
+					"name": "Create contract",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNTczNDc5MDI1LCJleHAiOjE1NzM1MTUwMjV9.X6MNES-oIHK016u-QBbsjkmu1tMysFrAi-Dw8kbVLf4",
+									"type": "string"
+								}
+							]
 						},
-						{
-							"key": "password",
-							"value": "abc123",
-							"type": "text"
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "contract",
+									"type": "file",
+									"src": "/C:/Users/Xuan Thu/Pictures/72758373_767564506998065_6266959095681515520_n.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}:3001/contract",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"contract"
+							]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{url}}:3001/user/login",
-					"host": [
-						"{{url}}"
-					],
-					"port": "3001",
-					"path": [
-						"user",
-						"login"
-					]
+				{
+					"name": "Delete contract",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNTczNDc5MDI1LCJleHAiOjE1NzM1MTUwMjV9.X6MNES-oIHK016u-QBbsjkmu1tMysFrAi-Dw8kbVLf4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:3001/contract/5dc96a544f24b72f6831b738",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"contract",
+								"5dc96a544f24b72f6831b738"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update contract",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNTczNDc5MDI1LCJleHAiOjE1NzM1MTUwMjV9.X6MNES-oIHK016u-QBbsjkmu1tMysFrAi-Dw8kbVLf4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nameContract",
+									"value": "Hợp đồng Công ty C",
+									"type": "text"
+								},
+								{
+									"key": "partner",
+									"value": "Phạm Xuân Thư",
+									"type": "text"
+								},
+								{
+									"key": "owner",
+									"value": "thupx",
+									"description": "not update",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}:3001/contract/5dc96baa190a47140ce5edb5",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"contract",
+								"5dc96baa190a47140ce5edb5"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}

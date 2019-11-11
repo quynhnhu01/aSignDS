@@ -8,12 +8,11 @@ function createToken(username) {
         username: username,
     }
     return new Promise((resolve, reject) => {
-        jwt.sign(payload, CONSTANTS.SECRET_KEY, { 'expiresIn': 600 }, (err, token) => {
+        jwt.sign(payload, CONSTANTS.SECRET_KEY, { 'expiresIn': '10h' }, (err, token) => {
             if (err) {
                 console.log(err);
                 reject(err);
             }
-
             resolve(token);
         });
     })
