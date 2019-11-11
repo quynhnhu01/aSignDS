@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@pdftron/pdfjsexpress": "^6.0.0-beta",
     "antd": "^3.25.0",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
