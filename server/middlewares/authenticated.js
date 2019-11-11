@@ -13,10 +13,13 @@ AuthMiddleware.checkAuth = (req, res, next) => {
                 req.username = decoded.username;
                 next();
             }
-            else res.json({ message: "UNAUTHORIZED REQUEST" });
+            else return res.json({ message: "Unauthorized: Access to this resources is denied", code: 401, error: "Unauthorized Error" });
         } catch (error) {
-            res.json({...error});
+            res.json({ ...error });
         }
+    }
+    else {
+        return res.json({ message: "Unauthorized: Access to this resources is denied", code: 401, error: "Unauthorized Error" });
     }
 }
 module.exports = AuthMiddleware;

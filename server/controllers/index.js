@@ -1,6 +1,6 @@
 const CONTROLLER = {};
 const userController = require('../controllers/user.controller');
-const uploadController = require('../controllers/upload.controller');
+const contractController = require('./contract.controller');
 CONTROLLER.userController = userController;
-CONTROLLER.uploadController = uploadController;
+CONTROLLER.contractController = contractController;
 module.exports = CONTROLLER;

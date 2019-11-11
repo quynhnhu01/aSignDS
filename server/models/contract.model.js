@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
-
 const contractSchema = mongoose.Schema({
-    ID: String,
     nameContract: String,
     owner: String,
     partner: String,
     contractUrl: String,
     createdAt: String,
     updatedAt: String,
+    fileName: String
 });
-const contractModel = mongoose.model("upload", contractSchema);
+const contractModel = mongoose.model("contract", contractSchema);
 module.exports = contractModel;
