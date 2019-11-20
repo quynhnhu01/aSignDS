@@ -10,7 +10,7 @@ AuthMiddleware.checkAuth = (req, res, next) => {
             const token = authorization.split(' ')[1];
             const decoded = jwt.verify(token, SECRET_KEY);
             if (decoded) {
-                req.username = decoded.username;
+                req.user = decoded;
                 next();
             }
             else return res.json({ message: "Unauthorized: Access to this resources is denied", code: 401, error: "Unauthorized Error" });

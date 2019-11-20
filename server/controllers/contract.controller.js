@@ -15,7 +15,7 @@ async function createContract(req, res) {
     const newContract = {};
     // newContract.ID = "123456"; _id tự sinh ra bởi mongodb 
     newContract.nameContract = `contract-${uuid.v4().slice(0, 8)}`;
-    newContract.owner = req.username;
+    newContract.owner = req.user.username;
     newContract.partner = "";
     newContract.createdAt = Date.now();
     newContract.updatedAt = Date.now();

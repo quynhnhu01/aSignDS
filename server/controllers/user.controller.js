@@ -3,12 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const CONSTANTS = require('../constants');
 const NodeRSA = require('node-rsa');
-function createToken(username) {
-    const payload = {
-        username: username,
-    }
+function createToken(data) {
     return new Promise((resolve, reject) => {
-        jwt.sign(payload, CONSTANTS.SECRET_KEY, { 'expiresIn': '10h' }, (err, token) => {
+        jwt.sign(data, CONSTANTS.SECRET_KEY, { 'expiresIn': '10h' }, (err, token) => {
             if (err) {
                 console.log(err);
                 reject(err);
@@ -82,8 +79,12 @@ async function login(req, res) {
         const userLogin = await userModel.findOne({ username: username });
         if (userLogin) {
             const isMatch = await comparePassword(password, userLogin.password);
-            if (!isMatch) return res.json({ message: "Password does not match", error: "Not Matched", success: false })
-            const token = await createToken(username);
+            if (!isMatch) return res.json({ message: "Password does not match", error: "Not Matched", success: false });
+            const data = {
+                username: username,
+                id: userLogin.id
+            }
+            const token = await createToken(data);
             res.json({ ...userLogin._doc, token });
         }
         else res.json({ message: "Username not found", error: "Not Found", success: false });
