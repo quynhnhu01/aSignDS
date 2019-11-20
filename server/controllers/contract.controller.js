@@ -1,4 +1,3 @@
-const contractModel = require('../models/contract.model');
 const uuid = require('uuid');
 const fs = require('fs');
 const ContractService = require('../services/contract.service');
