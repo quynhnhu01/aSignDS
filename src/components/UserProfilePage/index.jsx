@@ -4,6 +4,8 @@ import { AuthContext } from "../../contexts/auth.context";
 import { Redirect } from 'react-router-dom';
 import { Avatar } from 'antd';
 import { Button, Modal } from 'react-bootstrap';
+import axios from 'axios';
+import CONSTANTS from '../../constants';
 
 const data = [
     {
@@ -95,10 +97,17 @@ export default class UserProfilePage extends Component {
         this.setState({ data: newData })
     }
     
+    handleAddPartner = async () => {
+        const id = this.state.id;
+        const newData = [...this.state.data];    
+        console.log(newData[id - 1].Email);
+        // const response = await axios.post(CONSTANTS.ENDPOINT.ADDPARTNER, {
+        //     // file: pdf
+        // });
+        this.setState({ setShow: false })
 
-    handleSubmit = () => {
+    };
 
-    }
     render() {
         const { person,data } = this.state
         return (
@@ -181,7 +190,7 @@ export default class UserProfilePage extends Component {
                         <Button variant="secondary" onClick={this.handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={this.handleClose}>
+                        <Button variant="primary" onClick={this.handleAddPartner}>
                             Save Changes
                         </Button>
                         </Modal.Footer>
@@ -200,21 +209,21 @@ export default class UserProfilePage extends Component {
                             value={this.state.data[this.state.index].ContractName}
                             onChange={this.handleChange}
                             />
-                            <p>Enter Couterpart Email</p>
+                            <p>Owner</p>
                             <input
                             type="text"
                             name="Owner"
                             value={this.state.data[this.state.index].Owner}
                             onChange={this.handleChange}
                             />
-                            <p>Enter Couterpart Email</p>
+                            <p>Counterpart</p>
                             <input
                             type="text"
                             name="Counterpart"
                             value={this.state.data[this.state.index].Counterpart}
                             onChange={this.handleChange}
                             />
-                            <p>Enter Couterpart Email</p>
+                            <p>Couterpart Email</p>
                             <input
                             name="Email"
                             type="text"
