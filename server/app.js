@@ -7,10 +7,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { URI } = require("./constants");
 
-const { userRouter, gridRouter, emailRouter ,uploadRouter} = require("./routes/index");
+const { userRouter, gridRouter, emailRouter, contractRouter } = require("./routes/index");
 
 const app = express();
-mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
+mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err) => {
     if (!err) console.log("Connected to MongoDB");
 });
 app.use(logger("dev"));
@@ -23,7 +23,7 @@ app.use(cors());
 app.use("/api", gridRouter);
 app.use("/user", userRouter);
 app.use("/", emailRouter);
-app.use("/upload", uploadRouter);
+app.use("/contract", contractRouter);
 app.get("*", (req, res) => {
     res.sendFile("build/index.html", { root: __dirname });
 });
