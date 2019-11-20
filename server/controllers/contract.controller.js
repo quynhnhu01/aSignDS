@@ -1,9 +1,9 @@
 const contractModel = require('../models/contract.model');
 const uuid = require('uuid');
 const fs = require('fs');
-
+const ContractService = require('../services/contract.service');
 async function getContract(req, res) {
-    const contracts = await contractModel.find();
+    const contracts = await ContractService.GetAllContracts();
     res.json({ data: contracts });
 };
 
@@ -21,13 +21,13 @@ async function createContract(req, res) {
     newContract.updatedAt = Date.now();
     newContract.contractUrl = fileURL;
     newContract.fileName = req.file.filename;
-    const result = await contractModel.create(newContract);
+    const result = await ContractService.CreateNewContract(newContract);
     if (result) return res.json({ data: result });
 };
 
 async function deleteContract(req, res) {
     console.log("id", req.params.id);
-    const contractDelete = await contractModel.findOneAndDelete(req.params.id);
+    const contractDelete = await ContractService.DeleteContract(req.params.id);
     console.log(contractDelete);
 
     if (contractDelete) {
@@ -66,7 +66,8 @@ async function updateContract(req, res) { // rename thanh updateContract
         updatedAt: Date.now()
     }
     Object.keys(update).forEach((key) => (update[key] == null) && delete update[key]);
-    const updatedContract = await contractModel.findByIdAndUpdate(id, update, { new: true });//new true de return ve value moi nhat
+    // const updatedContract = await contractModel.findByIdAndUpdate(id, update, { new: true });//new true de return ve value moi nhat
+    const updatedContract = await ContractService.UpdateContract(id, update);
     console.log(updatedContract);
 
     if (updatedContract) {
