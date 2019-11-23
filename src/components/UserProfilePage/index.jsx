@@ -53,11 +53,22 @@ export default class UserProfilePage extends Component {
             setShow: false,
             counterpartEmail: '',
             id: 0,
-            index: 0
+            index: 0,
+            contracts: []
         }
     }
     static contextType = AuthContext;
-    componentDidMount() {
+    async componentDidMount() {
+        const { token } = this.context.user;
+        const response = await axios.get(`${CONSTANTS.ENDPOINT.USER}/contract`, {
+            headers: {
+                authorization: "Bearer " + token
+            }
+        });
+        console.log('contract user', response.data);
+        if (response.data.data.length) {
+            this.setState({ contracts: response.data.data })
+        }
     }
 
     handleDelete = () => {
@@ -65,41 +76,41 @@ export default class UserProfilePage extends Component {
     }
 
     handleEdit = () => {
-        
+
     }
-    
+
     handleAdd = (index) => {
-        this.setState({ setShow2: true, index: index - 1  })
+        this.setState({ setShow2: true, index: index - 1 })
         console.log(this.state.index)
     }
-    
+
     handleClose = () => {
-        this.setState({ setShow: false, setShow2: false, id: 0, index: 0})
+        this.setState({ setShow: false, setShow2: false, id: 0, index: 0 })
         console.log(this.state.id)
     }
 
     handleShow = (id) => {
-        this.setState({ setShow: true, id  })
+        this.setState({ setShow: true, id })
         console.log(this.state.id)
     }
 
-    handleChangeEmail= (e) => {
+    handleChangeEmail = (e) => {
         const id = this.state.id;
         const newData = [...this.state.data];
         newData[id - 1].Email = e.target.value
         this.setState({ data: newData })
     }
 
-    handleChange= (e) => {
+    handleChange = (e) => {
         const index = this.state.index;
         const newData = [...this.state.data];
         newData[index][e.target.name] = e.target.value
         this.setState({ data: newData })
     }
-    
+
     handleAddPartner = async () => {
         const id = this.state.id;
-        const newData = [...this.state.data];    
+        const newData = [...this.state.data];
         console.log(newData[id - 1].Email);
         // const response = await axios.post(CONSTANTS.ENDPOINT.ADDPARTNER, {
         //     // file: pdf
@@ -109,7 +120,8 @@ export default class UserProfilePage extends Component {
     };
 
     render() {
-        const { person,data } = this.state
+        const { person, data } = this.state;
+        const { user } = this.context;
         return (
             <Fragment>
                 <div className='UserProfile__page'>
@@ -129,15 +141,15 @@ export default class UserProfilePage extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    data.map((data) =>
-                                        <tr key={data.id}>
-                                            <th scope="row">{data.id}</th>
-                                            <td>{data.ContractName}</td>
-                                            <td>{data.Owner}</td>
-                                            <td>{data.Counterpart}</td>
-                                            <td>{data.Email}</td>
+                                    this.state.contracts.map((contract, index) =>
+                                        <tr key={contract._id}>
+                                            <th scope="row">{index}</th>
+                                            <td>{contract.nameContract}</td>
+                                            <td>{contract.owner.username}</td>
+                                            <td>{contract.partner[0] ? contract.partner[0].username : 'Non Partner'}</td>
+                                            <td>{contract.partner[0] ? contract.partner[0].email : 'Non Partner'}</td>
                                             <td className="UserProfile__page--table__action">
-                                                
+
                                                 <div className="UserProfile__page--table__action-edit" onClick={() => this.handleAdd(data.id)}>
                                                     <img src="https://cdn2.iconfinder.com/data/icons/education-2-45/48/71-512.png" alt="icon-edit" />
                                                 </div>
@@ -161,9 +173,9 @@ export default class UserProfilePage extends Component {
 
                             <div>
                                 <Avatar size={64} icon="user" />
-                                <h5 ><strong id="user-name">{person.userName}</strong></h5>
-                                <p id="user-frid">{person.address} </p>
-                                <p id="user-email">{person.email}</p>
+                                <h5 ><strong id="user-name">{user.username}</strong></h5>
+                                <p id="user-frid">{user.address || 'Address'} </p>
+                                <p id="user-email">{user.email}</p>
                                 <p ><strong>A/C status: </strong><span className="tags" id="user-status">Active</span></p>
                                 <p ><strong>Job role</strong></p>
                                 <p id="user-role">{person.job}</p>
@@ -172,74 +184,74 @@ export default class UserProfilePage extends Component {
 
                     </div>
                 </div>
-                <div className="modal__AddEmail"> 
+                <div className="modal__AddEmail">
                     <Modal show={this.state.setShow} onHide={this.handleClose}>
                         <Modal.Header closeButton>
-                        <Modal.Title>Add A Counterpart</Modal.Title>
+                            <Modal.Title>Add A Counterpart</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <p>Enter Couterpart Email</p>
                             <input
-                            className="email"
-                            type="text"
-                            placeholder="Example: abc@gmail.com"
-                            onChange={this.handleChangeEmail}
+                                className="email"
+                                type="text"
+                                placeholder="Example: abc@gmail.com"
+                                onChange={this.handleChangeEmail}
                             />
                         </Modal.Body>
                         <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleClose}>
-                            Close
+                            <Button variant="secondary" onClick={this.handleClose}>
+                                Close
                         </Button>
-                        <Button variant="primary" onClick={this.handleAddPartner}>
-                            Save Changes
+                            <Button variant="primary" onClick={this.handleAddPartner}>
+                                Save Changes
                         </Button>
                         </Modal.Footer>
                     </Modal>
                 </div>
                 <div className="modal_EditContract">
-                <Modal show={this.state.setShow2} onHide={this.handleClose}>
+                    <Modal show={this.state.setShow2} onHide={this.handleClose}>
                         <Modal.Header closeButton>
-                        <Modal.Title>Add A Counterpart</Modal.Title>
+                            <Modal.Title>Add A Counterpart</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <p>Contract Name</p>
                             <input
-                            type="text"
-                            name="ContractName"
-                            value={this.state.data[this.state.index].ContractName}
-                            onChange={this.handleChange}
+                                type="text"
+                                name="ContractName"
+                                value={this.state.data[this.state.index].ContractName}
+                                onChange={this.handleChange}
                             />
                             <p>Owner</p>
                             <input
-                            type="text"
-                            name="Owner"
-                            value={this.state.data[this.state.index].Owner}
-                            onChange={this.handleChange}
+                                type="text"
+                                name="Owner"
+                                value={this.state.data[this.state.index].Owner}
+                                onChange={this.handleChange}
                             />
                             <p>Counterpart</p>
                             <input
-                            type="text"
-                            name="Counterpart"
-                            value={this.state.data[this.state.index].Counterpart}
-                            onChange={this.handleChange}
+                                type="text"
+                                name="Counterpart"
+                                value={this.state.data[this.state.index].Counterpart}
+                                onChange={this.handleChange}
                             />
                             <p>Couterpart Email</p>
                             <input
-                            name="Email"
-                            type="text"
-                            value={this.state.data[this.state.index].Email}
-                            onChange={this.handleChange}
+                                name="Email"
+                                type="text"
+                                value={this.state.data[this.state.index].Email}
+                                onChange={this.handleChange}
                             />
                         </Modal.Body>
                         <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleClose}>
-                            Close
+                            <Button variant="secondary" onClick={this.handleClose}>
+                                Close
                         </Button>
-                        <Button variant="primary" onClick={this.handleClose}>
-                            Save Changes
+                            <Button variant="primary" onClick={this.handleClose}>
+                                Save Changes
                         </Button>
                         </Modal.Footer>
-                    </Modal>      
+                    </Modal>
                 </div>
             </Fragment>
         )
