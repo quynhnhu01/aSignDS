@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const CONSTANTS = require('../constants');
 const NodeRSA = require('node-rsa');
+const UserService = require('../services/user.service');
+
 function createToken(data) {
     return new Promise((resolve, reject) => {
         jwt.sign(data, CONSTANTS.SECRET_KEY, { 'expiresIn': '10h' }, (err, token) => {
@@ -117,10 +119,18 @@ async function getUser(req, res) {
     const users = await userModel.find();
     res.json({ data: users });
 }
-
+async function getAllContractForUser(req, res) {
+    const userId = req.user.id;
+    if (userId) {
+        const contracts = await UserService.getAllContractForUser(userId);
+        console.log("contracts");
+        return res.json({ data: contracts })
+    }
+}
 module.exports = {
     login: login,
     register: register,
     getUser: getUser,
     generateDigitalSignature: generateDigitalSignature,
+    getAllContractForUser
 }

@@ -6,6 +6,7 @@ const { checkAuth } = require('../middlewares/authenticated');
 routerUser.get('/users', userController.getUser);
 routerUser.post('/register', userController.register);
 routerUser.post('/login', userController.login);
+routerUser.get('/contract', checkAuth, userController.getAllContractForUser);
 routerUser.get('/create-ds', checkAuth, async (req, res) => {
     const digitalSignature = await userController.generateDigitalSignature(req.user.username);
     res.json({ message: "Digital signature generated", data: digitalSignature, success: true });

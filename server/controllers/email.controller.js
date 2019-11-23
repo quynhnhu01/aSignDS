@@ -5,15 +5,13 @@ const Validator = require('class-validator').Validator;
 const validator = new Validator();
 async function sendMail(req, res) {
     try {
-        const username = req.username;
+        const username = req.user.username;
         const partnerEmail = req.params.partner;
-        console.log(validator.isEmail(partnerEmail));
-
         if (!validator.isEmail(partnerEmail)) throw new Error('Email is not valid');
-        const owner = userModel.findOne({ username: username }).select('-password');
+        const owner = await userModel.findOne({ username: username }).select('-password');
         console.log("owner", owner);
         if (!owner) throw new Error('Not found user');
-        const newPartner = userModel.findOne({ email: partnerEmail }).select('-password');
+        const newPartner = await userModel.findOne({ email: partnerEmail }).select('-password');
         if (!newPartner) throw new Error('Partner email is not registered');
         const sender = await nodemailer.createTestAccount();
         const transporter = nodemailer.createTransport({
@@ -51,7 +49,7 @@ async function sendMail(req, res) {
           }`
         if (info) {
             console.log("update contract");
-            const updatedContract = contractModel.findOneAndUpdate({ owner: owner.id }, { $addToSet: { partner: newPartner.id } }, { new: true })
+            const updatedContract = await contractModel.findOneAndUpdate({ owner: owner.id }, { $addToSet: { partner: newPartner.id } }, { new: true })
             if (updatedContract)
                 return res.json({ 'result': updatedContract, 'message': nodemailer.getTestMessageUrl(info) });
             else throw new Error('Could not updated contract');
