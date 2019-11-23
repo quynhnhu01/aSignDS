@@ -12,5 +12,6 @@ CONSTANTS.ENDPOINT.REGISTER = "/user/register";
 CONSTANTS.ENDPOINT.UPLOAD = "/upload/postupload";
 CONSTANTS.ENDPOINT.ADDPARTNER = "/";
 
+CONSTANTS.ENDPOINT.USER = "/user";
 
 export default CONSTANTS;
