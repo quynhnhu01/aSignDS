@@ -22,7 +22,7 @@ app.use(cors());
 
 app.use("/api", gridRouter);
 app.use("/user", userRouter);
-app.use("/", emailRouter);
+app.use("/mail", emailRouter);
 app.use("/contract", contractRouter);
 app.get("*", (req, res) => {
     res.sendFile("build/index.html", { root: __dirname });
