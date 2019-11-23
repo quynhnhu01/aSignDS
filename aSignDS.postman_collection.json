@@ -106,14 +106,43 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}:3001/user/users",
+							"raw": "{{url}}:{{port}}/user/users",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"user",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Contract of User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI1ZDljNDk2OTQ4M2IyMzNjZTQ5ZTU2NWEiLCJpYXQiOjE1NzQ1MTY1MjksImV4cCI6MTU3NDU1MjUyOX0.fEPOnbPK6iXVB-UL_y8TvBUMkuj_KIuJDvftT_Ap8xY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:3001/user/contract",
 							"host": [
 								"{{url}}"
 							],
 							"port": "3001",
 							"path": [
 								"user",
-								"users"
+								"contract"
 							]
 						}
 					},
@@ -152,7 +181,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNTczNDc5MDI1LCJleHAiOjE1NzM1MTUwMjV9.X6MNES-oIHK016u-QBbsjkmu1tMysFrAi-Dw8kbVLf4",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRodXB4IiwiaWQiOiI1ZGMzOWRjZGExZDY1YTA2ZjgyYjMwN2MiLCJpYXQiOjE1NzQ1MTY0NTAsImV4cCI6MTU3NDU1MjQ1MH0.l6wcCp77cTffGKiQfivgZR_od_tPUqrd8GhknHGe2OA",
 									"type": "string"
 								}
 							]
@@ -271,6 +300,42 @@
 							"path": [
 								"contract",
 								"5dc96baa190a47140ce5edb5"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Mail",
+			"item": [
+				{
+					"name": "Send mail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI1ZDljNDk2OTQ4M2IyMzNjZTQ5ZTU2NWEiLCJpYXQiOjE1NzQ1MTY1MjksImV4cCI6MTU3NDU1MjUyOX0.fEPOnbPK6iXVB-UL_y8TvBUMkuj_KIuJDvftT_Ap8xY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:3001/mail/invite/thupx@gmail.com",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"mail",
+								"invite",
+								"thupx@gmail.com"
 							]
 						}
 					},
