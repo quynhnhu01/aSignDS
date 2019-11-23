@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const SchemaTypes = mongoose.SchemaTypes;
 const contractSchema = mongoose.Schema({
     nameContract: String,
-    owner: String,
-    partner: String,
+    owner: { type: SchemaTypes.ObjectId, ref: 'users' },
+    partner: { type: SchemaTypes.Array },
     contractUrl: String,
     createdAt: String,
     updatedAt: String,
