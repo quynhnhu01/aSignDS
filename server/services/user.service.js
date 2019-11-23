@@ -6,7 +6,11 @@ async function getAllContractForUser(userId) {
         .find({ owner: userId })
         .populate({
             path: 'partner',
-            select: 'fullname email'
+            select: 'fullname email username'
+        })
+        .populate({
+            path: 'owner',
+            select: 'fullname email username'
         })
         .exec();
     return contracts;
