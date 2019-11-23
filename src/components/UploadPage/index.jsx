@@ -1,5 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PDFJSExpressViewer from '../PDFViewer';
-export default function UploadPage(props) {
-    return <PDFJSExpressViewer />;
+
+export default class UploadPage extends Component {
+    render() {
+        return (
+            <div className="UploadPage">
+                <PDFJSExpressViewer className="UploadPage__PDF"/>
+               
+            </div>
+        )
+    }
 }
