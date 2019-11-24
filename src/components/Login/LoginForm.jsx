@@ -8,6 +8,11 @@ export default function LoginForm(props) {
     useEffect(() => {
         inputElementRef.current.focus();
     }, []);
+    const handleEnter = (event) => {
+        if (event.key === 'Enter') {
+            props.login(username, password);
+        }
+    }
     return (
         <div style={{ justifyContent: 'center', display: 'flex' }}>
             <div className="col-md-3" >
@@ -38,6 +43,7 @@ export default function LoginForm(props) {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyPress={e => handleEnter(e)}
                         required
                     />
                 </div>
