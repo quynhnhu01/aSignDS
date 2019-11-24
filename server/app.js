@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { URI } = require("./constants");
 
-const { userRouter, gridRouter, emailRouter, contractRouter } = require("./routes/index");
+const { userRouter, gridRouter, emailRouter, contractRouter, verifyRouter } = require("./routes/index");
 
 const app = express();
 mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err) => {
@@ -24,6 +24,7 @@ app.use("/api", gridRouter);
 app.use("/user", userRouter);
 app.use("/mail", emailRouter);
 app.use("/contract", contractRouter);
+app.use("/verify", verifyRouter);
 app.get("*", (req, res) => {
     res.sendFile("build/index.html", { root: __dirname });
 });
