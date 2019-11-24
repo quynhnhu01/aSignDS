@@ -66,7 +66,7 @@
 							"urlencoded": [
 								{
 									"key": "username",
-									"value": "admin",
+									"value": "xuanthu",
 									"type": "text"
 								},
 								{
@@ -83,18 +83,28 @@
 									"key": "fullname",
 									"value": "Administrator",
 									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "xuanthu@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "abc 10th Stress",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{url}}:3001/user/users",
+							"raw": "{{url}}:3001/user/register",
 							"host": [
 								"{{url}}"
 							],
 							"port": "3001",
 							"path": [
 								"user",
-								"users"
+								"register"
 							]
 						}
 					},
@@ -319,7 +329,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI1ZDljNDk2OTQ4M2IyMzNjZTQ5ZTU2NWEiLCJpYXQiOjE1NzQ1MTY1MjksImV4cCI6MTU3NDU1MjUyOX0.fEPOnbPK6iXVB-UL_y8TvBUMkuj_KIuJDvftT_Ap8xY",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWQiOiI1ZDljNDk2OTQ4M2IyMzNjZTQ5ZTU2NWEiLCJpYXQiOjE1NzQ1ODI4NjMsImV4cCI6MTU3NDYxODg2M30.iM2xtIz8R-MLcKp8SV8mgUUNEEFAqS5leXp3QTAiOvU",
 									"type": "string"
 								}
 							]
@@ -327,7 +337,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}:3001/mail/invite/thupx@gmail.com",
+							"raw": "{{url}}:3001/mail/invite/5dd935482c09b8339cab9d32&xuanthu404@gmail.com",
 							"host": [
 								"{{url}}"
 							],
@@ -335,7 +345,44 @@
 							"path": [
 								"mail",
 								"invite",
-								"thupx@gmail.com"
+								"5dd935482c09b8339cab9d32&xuanthu404@gmail.com"
+							]
+						},
+						"description": "endpoint này có 2 tham số : tham số đầu tiên là Id của contract cần mời, tham số tiếp theo là email cần mời, hệ thống tự check lỗi"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Verify",
+			"item": [
+				{
+					"name": "Verify Invitation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFiYzEyMyIsImlkIjoiNWRhNDRmOWU3MGVjYjIzYTY0Mjk1MDk0IiwiaWF0IjoxNTc0NTg4MDU3LCJleHAiOjE1NzQ2MjQwNTd9.FPGr9kPmavG5RWz1yQ6CMQnAAqNopFWyRwD-d2lb75w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:3001/verify/invite/203660",
+							"host": [
+								"{{url}}"
+							],
+							"port": "3001",
+							"path": [
+								"verify",
+								"invite",
+								"203660"
 							]
 						}
 					},
