@@ -102,10 +102,14 @@ export default class UserProfilePage extends Component {
     }
 
     handleChange = (e) => {
-        const index = this.state.index;
-        const newData = [...this.state.data];
-        newData[index][e.target.name] = e.target.value
-        this.setState({ data: newData })
+        // const index = this.state.index;
+        // const newData = [...this.state.data];
+        // newData[index][e.target.name] = e.target.value
+        // this.setState({ data: newData })
+        const { index, contracts } = this.state;
+        const newContracts = [...contracts];
+        newContracts[index][e.target.name] = e.target.value;
+        this.setState({ contracts: newContracts })
     }
 
     handleAddPartner = async () => {
@@ -120,7 +124,7 @@ export default class UserProfilePage extends Component {
     };
 
     render() {
-        const { person, data } = this.state;
+        const { person, data, contracts, index } = this.state;
         const { user } = this.context;
         return (
             <Fragment>
@@ -218,28 +222,28 @@ export default class UserProfilePage extends Component {
                             <input
                                 type="text"
                                 name="ContractName"
-                                value={this.state.data[this.state.index].ContractName}
+                                // value={contracts[index].nameContract}
                                 onChange={this.handleChange}
                             />
                             <p>Owner</p>
                             <input
                                 type="text"
                                 name="Owner"
-                                value={this.state.data[this.state.index].Owner}
+                                // value={contracts[this.state.index].owner}
                                 onChange={this.handleChange}
                             />
                             <p>Counterpart</p>
                             <input
                                 type="text"
                                 name="Counterpart"
-                                value={this.state.data[this.state.index].Counterpart}
+                                // value={contracts[this.state.index].partner[0].fullName}
                                 onChange={this.handleChange}
                             />
                             <p>Couterpart Email</p>
                             <input
                                 name="Email"
                                 type="text"
-                                value={this.state.data[this.state.index].Email}
+                                // value={contracts[this.state.index].partner[0].email}
                                 onChange={this.handleChange}
                             />
                         </Modal.Body>
