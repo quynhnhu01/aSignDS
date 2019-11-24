@@ -16,17 +16,15 @@ function createToken(data) {
         });
     })
 };
-/**
- * @description Check the user already existed
- * @param {String} username username need to check
- * @returns true if user exists. Otherwise false
- */
-async function isUserRegistered(username) {
+
+async function isUserRegistered(user) {
     try {
         let existedUser;
-        existedUser = await userModel.findOne({ username: username });
+        existedUser = await userModel.findOne({ username: user.username });
         if (!existedUser)
-            existedUser = await userModel.findOne({ email: email });
+            existedUser = await userModel.findOne({ email: user.email });
+        console.log("existedUser", existedUser);
+
         if (existedUser) return true;
         else return false;
     } catch (error) {
@@ -98,7 +96,7 @@ async function login(req, res) {
 async function register(req, res) {
     try {
         const userPayload = req.body;
-        const isExisting = await isUserRegistered(userPayload.username);
+        const isExisting = await isUserRegistered(userPayload);
         if (isExisting) {
             return res.json({ message: "User already registered", error: null, success: false });
         }
