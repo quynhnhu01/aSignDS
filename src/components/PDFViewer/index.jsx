@@ -9,7 +9,9 @@ export default class PDFJSExpressViewer extends Component {
         this.state = {
             file: null,
             setShow: false,
-            counterpartEmail: ''
+            counterpartEmail: '',
+            instance: null,
+            isLoaded: false
         }
     };
     componentDidMount() {
@@ -23,9 +25,20 @@ export default class PDFJSExpressViewer extends Component {
         }, this.viewer.current)
             .then(instance => {
                 console.log("instance", instance);
+                this.setState({ instance });
+                instance.enableElements(['leftPanel', 'leftPanelButton']);
                 instance.loadDocument(file, file.filename);
                 const docViewer = instance.docViewer;
-                docViewer.FitMode.FitWidth();
+                const FitMode = instance.FitMode;
+                instance.setFitMode(FitMode.Zoom);
+                docViewer.on('documentLoaded', () => {
+                    this.setState({ isLoaded: true });
+                });
+                var Feature = instance.Feature;
+                instance.enableFeatures([Feature.Download]);
+                instance.disableFeatures([Feature.Copy]);
+                instance.disableTools();
+                instance.enableTools(['AnnotationCreateSignature']);
             })
             .catch(err => console.log(err));
     }
@@ -37,11 +50,11 @@ export default class PDFJSExpressViewer extends Component {
 
     handleShow = () => {
         console.log('a')
-        this.setState({ setShow: true  })
+        this.setState({ setShow: true })
         // console.log(this.state.id)
     }
 
-    handleChangeEmail= (e) => {
+    handleChangeEmail = (e) => {
         const email = e.target.value;
         this.setState({ counterpartEmail: email })
         console.log(this.state.counterpartEmail)
@@ -49,9 +62,9 @@ export default class PDFJSExpressViewer extends Component {
 
     handleUpload = async (pdf) => {
         console.log(pdf);
-        const response = await axios.post(CONSTANTS.ENDPOINT.LOGIN, {
-            file: pdf
-        });
+        if (this.state.isLoaded)
+            this.state.instance.downloadPdf(false);
+            // console.log(this.state.instance.downloadPdf);
 
     };
 
@@ -60,6 +73,8 @@ export default class PDFJSExpressViewer extends Component {
         const response = await axios.post(CONSTANTS.ENDPOINT.ADDPARTNER, {
             // file: pdf
         });
+        console.log("response: " + JSON.stringify(response));
+
         this.setState({ setShow: false })
 
     };
@@ -68,29 +83,29 @@ export default class PDFJSExpressViewer extends Component {
         return (
             <div style={{ width: '100%', height: '100%', display: 'inline-block' }}>
                 <input type="file" accept='.pdf' onChange={this.handleFileUpload} />
-                <div style={{ height: '80vh'}} ref={this.viewer}> </div>
+                <div style={{ height: '80vh' }} ref={this.viewer}> </div>
                 <Button onClick={this.handleShow} >Add Partner</Button>
-                <Button onClick={() =>this.handleUpload(this.state.file)} >Save</Button>
-                <div className="modal__AddEmail"> 
+                <Button onClick={() => this.handleUpload(this.state.file)} >Save</Button>
+                <div className="modal__AddEmail">
                     <Modal show={this.state.setShow} onHide={this.handleClose}>
                         <Modal.Header closeButton>
-                        <Modal.Title>Add A Counterpart</Modal.Title>
+                            <Modal.Title>Add A Counterpart</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <p>Enter Couterpart Email</p>
                             <input
-                            className="email"
-                            type="text"
-                            placeholder="Example: abc@gmail.com"
-                            onChange={this.handleChangeEmail}
+                                className="email"
+                                type="text"
+                                placeholder="Example: abc@gmail.com"
+                                onChange={this.handleChangeEmail}
                             />
                         </Modal.Body>
                         <Modal.Footer>
-                        <Button variant="secondary" onClick={this.handleClose}>
-                            Close
+                            <Button variant="secondary" onClick={this.handleClose}>
+                                Close
                         </Button>
-                        <Button variant="primary" onClick={this.handleAddPartner(this.state.counterpartEmail)}>
-                            Save Changes
+                            <Button variant="primary" onClick={() => this.handleAddPartner(this.state.counterpartEmail)}>
+                                Save Changes
                         </Button>
                         </Modal.Footer>
                     </Modal>
