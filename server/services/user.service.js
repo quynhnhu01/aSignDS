@@ -1,4 +1,3 @@
-const userModel = require('../models/user.model');
 const contractModel = require('../models/contract.model');
 
 async function getAllContractForUser(userId) {
