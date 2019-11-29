@@ -1,8 +1,6 @@
 ﻿import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
 import Login from "./components/Login";
 import Grid from "./components/Grid";
 import About from "./components/About";
@@ -10,9 +8,7 @@ import UploadPage from "./components/UploadPage"
 import UserProfilePage from "./components/UserProfilePage"
 import { DefaultLayout } from "./layouts/default";
 import Register from "./components/Register";
-import { PrivateRoute } from "./helpers/PrivateRoute";
-const accessToken = window.sessionStorage.getItem("access_token");
-const isAuthenticated = accessToken !== null && accessToken.length > 0;
+// import { PrivateRoute } from "./helpers/PrivateRoute";
 class App extends Component {
     render() {
         return (
