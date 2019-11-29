@@ -150,17 +150,17 @@ export default class UserProfilePage extends Component {
                                             <th scope="row">{index}</th>
                                             <td>{contract.nameContract}</td>
                                             <td>{contract.owner.username}</td>
-                                            <td>{contract.partner[0] ? contract.partner[0].username : 'Non Partner'}</td>
-                                            <td>{contract.partner[0] ? contract.partner[0].email : 'Non Partner'}</td>
+                                            <td>{contract.partner[0] ? contract.partner[0].username : ''}</td>
+                                            <td>{contract.partner[0] ? contract.partner[0].email : ''}</td>
                                             <td className="UserProfile__page--table__action">
 
-                                                <div className="UserProfile__page--table__action-edit" onClick={() => this.handleAdd(data.id)}>
+                                                <div className="UserProfile__page--table__action-edit" onClick={() => this.handleAdd(data.id)} style={{ cursor: 'pointer' }}>
                                                     <img src="https://cdn2.iconfinder.com/data/icons/education-2-45/48/71-512.png" alt="icon-edit" />
                                                 </div>
-                                                <div className="UserProfile__page--table__action-add" onClick={() => this.handleShow(data.id)} >
+                                                <div className="UserProfile__page--table__action-add" onClick={() => this.handleShow(data.id)} style={{ cursor: 'pointer' }} >
                                                     <img src="https://cdn4.iconfinder.com/data/icons/ios7-essence/22/add_plus-512.png" alt="icon-add" />
                                                 </div>
-                                                <div className="UserProfile__page--table__action-delete">
+                                                <div className="UserProfile__page--table__action-delete" style={{ cursor: 'pointer' }}>
                                                     <img src="https://cdn2.iconfinder.com/data/icons/apple-inspire-white/100/Apple-64-512.png" alt="icon-delete" />
                                                 </div>
 
