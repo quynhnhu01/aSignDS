@@ -24,7 +24,7 @@ const Profile = (props) => {
             <Link className="nav-item nav-link active"
                 to="/profile"
             >{props.username}</Link>
-            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/fox.jpg" width="40" height="40" className="rounded-circle" />
+            <img src='https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=200&r=pg&d=404' width="40" height="40" className="rounded-circle" />
         </div>
     )
 }
