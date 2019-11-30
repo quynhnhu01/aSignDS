@@ -34,3 +34,11 @@ button:active {
     display: block;
     position: absolute;
   }
+  .ReactTable .rt-tbody .rt-td {
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+}
+.ReactTable .rt-thead .rt-tr .rt-th{
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+}

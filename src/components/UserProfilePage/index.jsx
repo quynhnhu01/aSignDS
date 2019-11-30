@@ -1,11 +1,15 @@
 import React, { Component, Fragment } from 'react'
 import './index.scss'
 import { AuthContext } from "../../contexts/auth.context";
-import { Redirect } from 'react-router-dom';
 import { Avatar } from 'antd';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Table } from 'react-bootstrap';
+import ReactTable from 'react-table';
 import axios from 'axios';
 import CONSTANTS from '../../constants';
+import 'react-table/react-table.css';
+import COLUMNS from './columns';
+import ModalEditor from './ModalEdit';
+import ModalAdder from './ModalAdd';
 
 const data = [
     {
@@ -54,34 +58,52 @@ export default class UserProfilePage extends Component {
             counterpartEmail: '',
             id: 0,
             index: 0,
-            contracts: []
+            contracts: [],
+            user: {},
+            editting: {},
+            deleting: {},
+            adding: {}
         }
     }
     static contextType = AuthContext;
     async componentDidMount() {
-        const { token } = this.context.user;
-        const response = await axios.get(`${CONSTANTS.ENDPOINT.USER}/contract`, {
-            headers: {
-                authorization: "Bearer " + token
+        console.log("componentDidMount");
+        const { user } = this.context;
+        if (user) {
+            const token = user.token;
+            this.setState({ user });
+            const response = await axios.get(`${CONSTANTS.ENDPOINT.USER}/contract`, {
+                headers: {
+                    authorization: "Bearer " + token
+                }
+            });
+            console.log('contract user', response.data);
+            const { data } = response.data;
+            const dataState = data.map((contract, index) => {
+                return {
+                    ...contract,
+                    no: index + 1
+                }
+            });
+            if (response.data.data.length) {
+                this.setState({ contracts: dataState });
             }
-        });
-        console.log('contract user', response.data);
-        if (response.data.data.length) {
-            this.setState({ contracts: response.data.data })
         }
     }
 
-    handleDelete = () => {
-
+    handleDelete = (member, contract) => {
+        console.log("handleDelete", member, contract);
     }
 
-    handleEdit = () => {
-
+    handleEdit = (member, contract) => {
+        console.log("handleEdit", member, contract);
+        this.setState({ setShow2: true, editting: { member, contract } });
     }
 
-    handleAdd = (index) => {
-        this.setState({ setShow2: true, index: index - 1 })
-        console.log(this.state.index)
+    handleAdd = (contract, email) => {
+        this.setState({ setShow: true, adding: contract });
+        console.log("add new user to contract", contract.nameContract, email);
+
     }
 
     handleClose = () => {
@@ -122,54 +144,44 @@ export default class UserProfilePage extends Component {
         this.setState({ setShow: false })
 
     };
+    getColumn = () => {
+        const columns = [
+            {
+                ...COLUMNS.No
+            },
 
+            {
+                ...COLUMNS.ContractName
+            },
+            {
+                ...COLUMNS.Owner('', '')
+            },
+            {
+                ...COLUMNS.Counterpart('', '')
+            },
+            {
+                ...COLUMNS.Email()
+            },
+            {
+                ...COLUMNS.Action(this.handleEdit, this.handleDelete, this.handleAdd)
+            }
+        ];
+        return columns;
+    }
     render() {
-        const { person, data, contracts, index } = this.state;
-        const { user } = this.context;
+        const { person, contracts, user } = this.state;
+        // const { user } = this.context;
         return (
             <Fragment>
                 <div className='UserProfile__page'>
                     <div className='UserProfile__page--table'>
                         <h1>CONTRACT</h1>
-                        <table className="table">
-                            <thead>
-                                <tr>
-
-                                    <th scope="col">No</th>
-                                    <th scope="col">Contract Name</th>
-                                    <th scope="col">Owner</th>
-                                    <th scope="col">Counterpart</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.contracts.map((contract, index) =>
-                                        <tr key={contract._id}>
-                                            <th scope="row">{index}</th>
-                                            <td>{contract.nameContract}</td>
-                                            <td>{contract.owner.username}</td>
-                                            <td>{contract.partner[0] ? contract.partner[0].username : ''}</td>
-                                            <td>{contract.partner[0] ? contract.partner[0].email : ''}</td>
-                                            <td className="UserProfile__page--table__action">
-
-                                                <div className="UserProfile__page--table__action-edit" onClick={() => this.handleAdd(data.id)} style={{ cursor: 'pointer' }}>
-                                                    <img src="https://cdn2.iconfinder.com/data/icons/education-2-45/48/71-512.png" alt="icon-edit" />
-                                                </div>
-                                                <div className="UserProfile__page--table__action-add" onClick={() => this.handleShow(data.id)} style={{ cursor: 'pointer' }} >
-                                                    <img src="https://cdn4.iconfinder.com/data/icons/ios7-essence/22/add_plus-512.png" alt="icon-add" />
-                                                </div>
-                                                <div className="UserProfile__page--table__action-delete" style={{ cursor: 'pointer' }}>
-                                                    <img src="https://cdn2.iconfinder.com/data/icons/apple-inspire-white/100/Apple-64-512.png" alt="icon-delete" />
-                                                </div>
-
-                                            </td>
-                                        </tr>
-                                    )
-                                }
-                            </tbody>
-                        </table>
+                        <ReactTable
+                            data={contracts}
+                            columns={this.getColumn()}
+                            className="-striped -highlight"
+                            defaultPageSize={5}
+                        />
                     </div>
                     <div className='UserProfile__page--profile'>
                         <div className="container">
@@ -188,75 +200,18 @@ export default class UserProfilePage extends Component {
 
                     </div>
                 </div>
-                <div className="modal__AddEmail">
-                    <Modal show={this.state.setShow} onHide={this.handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Add A Counterpart</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Enter Couterpart Email</p>
-                            <input
-                                className="email"
-                                type="text"
-                                placeholder="Example: abc@gmail.com"
-                                onChange={this.handleChangeEmail}
-                            />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={this.handleClose}>
-                                Close
-                        </Button>
-                            <Button variant="primary" onClick={this.handleAddPartner}>
-                                Save Changes
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </div>
-                <div className="modal_EditContract">
-                    <Modal show={this.state.setShow2} onHide={this.handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Add A Counterpart</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Contract Name</p>
-                            <input
-                                type="text"
-                                name="ContractName"
-                                // value={contracts[index].nameContract}
-                                onChange={this.handleChange}
-                            />
-                            <p>Owner</p>
-                            <input
-                                type="text"
-                                name="Owner"
-                                // value={contracts[this.state.index].owner}
-                                onChange={this.handleChange}
-                            />
-                            <p>Counterpart</p>
-                            <input
-                                type="text"
-                                name="Counterpart"
-                                // value={contracts[this.state.index].partner[0].fullName}
-                                onChange={this.handleChange}
-                            />
-                            <p>Couterpart Email</p>
-                            <input
-                                name="Email"
-                                type="text"
-                                // value={contracts[this.state.index].partner[0].email}
-                                onChange={this.handleChange}
-                            />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={this.handleClose}>
-                                Close
-                        </Button>
-                            <Button variant="primary" onClick={this.handleClose}>
-                                Save Changes
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </div>
+                {this.state.setShow ? <ModalAdder
+                    show={this.state.setShow}
+                    data={this.state.adding}
+                    onHide={this.handleClose}
+                    handleAdd={this.handleAdd}
+                /> : null}
+                {this.state.setShow2 ? <ModalEditor
+                    show={this.state.setShow2}
+                    data={this.state.editting}
+                    onHide={this.handleClose}
+                /> : null}
+
             </Fragment>
         )
     }
