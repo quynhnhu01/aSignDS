@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@pdftron/pdfjsexpress": "^6.0.0-beta",
+    "@material-ui/core": "^4.7.1",
     "antd": "^3.25.0",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
@@ -18,6 +18,8 @@
     "express": "^4.16.4",
     "fs-extra": "8.1.0",
     "jsonwebtoken": "^8.5.1",
+    "match-sorter": "^4.0.2",
+    "material-ui-dropzone": "^2.4.7",
     "mongoose": "^5.7.3",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
@@ -28,8 +30,10 @@
     "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.8.4",
     "react-pdf": "^4.1.0",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "^3.0.1",
+    "react-table": "^6.10.3",
+    "styled-components": "^4.4.1",
     "uuid": "^3.3.3"
   },
   "eslintConfig": {

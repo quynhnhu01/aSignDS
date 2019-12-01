@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Input } from 'react-bootstrap';
+import { DropzoneArea } from 'material-ui-dropzone'
 import axios from 'axios';
 import CONSTANTS from '../../constants';
+function configInstance(instance, file) {
+    instance.loadDocument(file, file.filename);
+    instance.enableElements(['leftPanel', 'leftPanelButton']);
+    const FitMode = instance.FitMode;
+    instance.setFitMode(FitMode.Zoom);
+    var Feature = instance.Feature;
+    instance.enableFeatures([Feature.Download]);
+    instance.disableFeatures([Feature.Copy]);
+    instance.disableTools();
+    instance.enableTools(['AnnotationCreateSignature']);
+}
 export default class PDFJSExpressViewer extends Component {
     constructor(props) {
         super(props);
@@ -11,36 +23,38 @@ export default class PDFJSExpressViewer extends Component {
             setShow: false,
             counterpartEmail: '',
             instance: null,
-            isLoaded: false
+            isLoaded: false,
+            uploaded: false
         }
     };
     componentDidMount() {
 
     }
-    handleFileUpload = event => {
-        const file = event.target.files[0];
-        this.setState({ file });
-        window.WebViewer({
-            path: '/pdfjsexpress'
-        }, this.viewer.current)
-            .then(instance => {
-                console.log("instance", instance);
-                this.setState({ instance });
-                instance.enableElements(['leftPanel', 'leftPanelButton']);
-                instance.loadDocument(file, file.filename);
-                const docViewer = instance.docViewer;
-                const FitMode = instance.FitMode;
-                instance.setFitMode(FitMode.Zoom);
-                docViewer.on('documentLoaded', () => {
-                    this.setState({ isLoaded: true });
-                });
-                var Feature = instance.Feature;
-                instance.enableFeatures([Feature.Download]);
-                instance.disableFeatures([Feature.Copy]);
-                instance.disableTools();
-                instance.enableTools(['AnnotationCreateSignature']);
-            })
-            .catch(err => console.log(err));
+    handleFileUpload = files => {
+        console.log(files[0]);
+        const file = files[0]
+        this.setState({ file, uploaded: true });
+        if (!this.state.instance)
+            window.WebViewer({
+                path: '/pdfjsexpress'
+            }, this.viewer.current)
+                .then(instance => {
+                    console.log("instance", instance);
+                    instance.docViewer.on('documentLoaded', () => {
+                        this.setState({ isLoaded: true });
+                    });
+                    this.setState({ instance });
+                    configInstance(instance, file)
+
+                })
+                .catch(err => console.log(err));
+        else {
+            const { instance } = this.state;
+            configInstance(instance, file);
+            instance.docViewer.on('documentLoaded', () => {
+                this.setState({ isLoaded: true });
+            });
+        }
     }
 
     handleClose = () => {
@@ -63,9 +77,7 @@ export default class PDFJSExpressViewer extends Component {
     handleUpload = async (pdf) => {
         console.log(pdf);
         if (this.state.isLoaded)
-            this.state.instance.downloadPdf(false);
-            // console.log(this.state.instance.downloadPdf);
-
+            this.state.instance.downloadPdf(true);
     };
 
     handleAddPartner = async (partner) => {
@@ -78,11 +90,23 @@ export default class PDFJSExpressViewer extends Component {
         this.setState({ setShow: false })
 
     };
-
+    handleAddAnother = () => {
+        this.state.instance.closeDocument().then(() => {
+            console.log('closeDocument');
+            this.setState({ uploaded: false, isLoaded: false });
+        })
+    }
     render() {
         return (
             <div style={{ width: '100%', height: '100%', display: 'inline-block' }}>
-                <input type="file" accept='.pdf' onChange={this.handleFileUpload} />
+                {/* <input type="file" accept='.pdf' onChange={this.handleFileUpload} /> */}
+                {!this.state.uploaded ?
+                    <DropzoneArea
+                        acceptedFiles={['.pdf']} onChange={this.handleFileUpload}
+                        dropzoneText='Drag and drop an pdf file here or click'
+                        filesLimit={1}
+                    /> :
+                    this.state.isLoaded ? <Button onClick={() => this.handleAddAnother()}>Upload another</Button> : null}
                 <div style={{ height: '80vh' }} ref={this.viewer}> </div>
                 <Button onClick={this.handleShow} >Add Partner</Button>
                 <Button onClick={() => this.handleUpload(this.state.file)} >Save</Button>

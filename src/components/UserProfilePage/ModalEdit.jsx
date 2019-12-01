@@ -38,7 +38,8 @@ export default function ModalEditor(props) {
                         name="Email"
                         type="text"
                         value={data.member.email}
-                        onChange={e => setEmail(e.target.value)}
+                        // onChange={e => setEmail(e.target.value)}
+                        disabled
                     />
                 </Modal.Body>
                 <Modal.Footer>
