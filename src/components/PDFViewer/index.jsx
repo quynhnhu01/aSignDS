@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-import { Button, Modal, Input } from 'react-bootstrap';
-import { DropzoneArea } from 'material-ui-dropzone'
+import { Modal, Input } from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
+import { DropzoneArea } from 'material-ui-dropzone';
+import Icon from '@material-ui/core/Icon';
 import axios from 'axios';
 import CONSTANTS from '../../constants';
+import Aux from '../../HOC/auxiliary';
+import SaveIcon from '@material-ui/icons/Save';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import AddIcon from '@material-ui/icons/Add';
+import { withStyles } from '@material-ui/core/styles'
 function configInstance(instance, file) {
     instance.loadDocument(file, file.filename);
     instance.enableElements(['leftPanel', 'leftPanelButton']);
@@ -14,7 +21,20 @@ function configInstance(instance, file) {
     instance.disableTools();
     instance.enableTools(['AnnotationCreateSignature']);
 }
-export default class PDFJSExpressViewer extends Component {
+const styles = theme => ({
+    root: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+    },
+    icon: {
+        margin: theme.spacing(2),
+    },
+    button: {
+        margin: theme.spacing(1),
+    },
+});
+class PDFJSExpressViewer extends Component {
     constructor(props) {
         super(props);
         this.viewer = React.createRef();
@@ -97,19 +117,46 @@ export default class PDFJSExpressViewer extends Component {
         })
     }
     render() {
+        const { classes } = this.props;
         return (
             <div style={{ width: '100%', height: '100%', display: 'inline-block' }}>
                 {/* <input type="file" accept='.pdf' onChange={this.handleFileUpload} /> */}
                 {!this.state.uploaded ?
-                    <DropzoneArea
-                        acceptedFiles={['.pdf']} onChange={this.handleFileUpload}
-                        dropzoneText='Drag and drop an pdf file here or click'
-                        filesLimit={1}
-                    /> :
-                    this.state.isLoaded ? <Button onClick={() => this.handleAddAnother()}>Upload another</Button> : null}
-                <div style={{ height: '80vh' }} ref={this.viewer}> </div>
-                <Button onClick={this.handleShow} >Add Partner</Button>
-                <Button onClick={() => this.handleUpload(this.state.file)} >Save</Button>
+                    <div style={{ padding: '50px', borderRadius: '5px' }}>
+                        <DropzoneArea
+                            acceptedFiles={['.pdf']} onChange={this.handleFileUpload}
+                            dropzoneText='Drag and drop an pdf file here or click'
+                            filesLimit={1}
+                        />
+                    </div> :
+                    this.state.isLoaded ?
+                        <Aux>
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                startIcon={<CloudUploadIcon />}
+                                onClick={() => this.handleAddAnother()}>New
+                                 </Button>
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                startIcon={<AddIcon />}
+                                color="primary"
+                                onClick={this.handleShow} >Add Partner
+                                 </Button>
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                onClick={() => this.handleUpload(this.state.file)}
+                                color="primary"
+                                startIcon={<SaveIcon />}
+                            >Save</Button>
+                        </Aux>
+                        : null}
+
+
+                <div style={{ height: '85vh' }} ref={this.viewer}> </div>
+
                 <div className="modal__AddEmail">
                     <Modal show={this.state.setShow} onHide={this.handleClose}>
                         <Modal.Header closeButton>
@@ -125,10 +172,16 @@ export default class PDFJSExpressViewer extends Component {
                             />
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="secondary" onClick={this.handleClose}>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={this.handleClose}>
                                 Close
                         </Button>
-                            <Button variant="primary" onClick={() => this.handleAddPartner(this.state.counterpartEmail)}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => this.handleAddPartner(this.state.counterpartEmail)}>
                                 Save Changes
                         </Button>
                         </Modal.Footer>
@@ -138,3 +191,4 @@ export default class PDFJSExpressViewer extends Component {
         )
     }
 }
+export default withStyles(styles)(PDFJSExpressViewer);
