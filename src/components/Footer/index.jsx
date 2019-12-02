@@ -9,7 +9,7 @@ export default function Footer() {
                     <div className="col-8 col-md-5">
                         <h5 className={styles.title}>aSignDS</h5>
                         <p className={styles.description}>
-                            Auto Sign wiht Digital Signature and Manage your document.
+                            Auto Sign with Digital Signature and Manage your document.
                         </p>
                     </div>
                     <div className="col-2">
