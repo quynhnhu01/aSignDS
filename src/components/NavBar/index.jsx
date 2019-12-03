@@ -83,8 +83,9 @@ export default function NavBar() {
                     <Link className="nav-item nav-link active" to="/about">
                         About
                     </Link>
-                    <If condition={user} component={Logout} />                  
-                    <Notification />
+                    <If condition={user} component={Notification} />  
+                    <If condition={user} component={Logout} />     
+                    
                 </div>
             </nav>
         </React.Fragment>
