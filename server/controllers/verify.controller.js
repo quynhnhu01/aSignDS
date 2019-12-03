@@ -5,7 +5,10 @@ async function verifyInvitation(req, res) {
         const code = req.params.code;
         const verification = await verifyModel.findOne({ code: code });
         if (!verification) throw new Error('Code provided is invalid');
-        if ((new Date().getTime() - 10 * 60 * 1000) > verification.expiresIn) throw new Error('Code expired');
+        if (verification.partner.toString() !== req.user.id) {
+            throw new Error('You are not allowed to access this contract');
+        }
+        // if ((new Date().getTime() - 10 * 60 * 1000) > verification.expiresIn) throw new Error('Code expired');
         else {
             const contractId = verification.contract;
             const updatedContract = await contractModel.findByIdAndUpdate(contractId, { $addToSet: { partner: req.user.id } }, { new: true });

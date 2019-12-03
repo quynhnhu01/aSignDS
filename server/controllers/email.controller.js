@@ -55,6 +55,7 @@ async function sendMail(req, res) {
                 contract: contract.id,
             });
             if (newVerifyCode) {
+                //publish message to server
                 console.log("Create new verify code");
                 return res.json({ message: 'Invited, waiting for verification from your partner', success: true });
             }

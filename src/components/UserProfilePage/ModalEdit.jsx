@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import './index.scss';
+import { Input } from 'antd';
+
 export default function ModalEditor(props) {
-    const { show, onHide, data, handleEdit } = props;
+    const { show, onHide, data, onEdit } = props;
     const [contractName, setcontractName] = useState('');
-    const [email, setEmail] = useState('');
     return (
         <div className="modal_EditContract">
-            <Modal show={show} onHide={onHide}>
+            <Modal show={show} onHide={() => onHide()}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add A Counterpart</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>Contract Name</p>
-                    <input
+                    <Input
                         type="text"
-                        name="ContractName"
-                        value={data.contract.nameContract}
-                        onChange={e => setcontractName(e.target.value)}
+                        placeholder={data.contract.nameContract}
+                        onChange={(e) => setcontractName(e.target.value)}
                     />
                     <p>Owner</p>
                     <input
@@ -43,10 +43,13 @@ export default function ModalEditor(props) {
                     />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onHide}>
+                    <Button variant="secondary" onClick={() => onHide()}>
                         Close
                         </Button>
-                    <Button variant="primary" onClick={() => console.log('clikc save')}>
+                    <Button variant="primary" onClick={() => {
+                        onHide();
+                        onEdit(data.contract._id, { nameContract: contractName });
+                    }}>
                         Save
                         </Button>
                 </Modal.Footer>

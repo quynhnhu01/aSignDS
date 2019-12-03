@@ -4,12 +4,14 @@ import { AuthContext } from "../../contexts/auth.context";
 import { Avatar } from 'antd';
 import ReactTable from 'react-table';
 import axios from 'axios';
+import AlertMessage from '../AlertMessage';
 import CONSTANTS from '../../constants';
 import 'react-table/react-table.css';
 import COLUMNS from './columns';
 import ModalEditor from './ModalEdit';
 import ModalAdder from './ModalAdd';
 import Aux from '../../HOC/auxiliary';
+import Axios from 'axios';
 const ProcessBar = props => (
     <div className='-loading -active'>
         Loading...
@@ -31,6 +33,9 @@ export default class UserProfilePage extends Component {
             deleting: {},
             adding: {},
             loading: false,
+            MessageOpen: false,
+            MessageText: "",
+            MessageType: 'success'
         }
     }
     static contextType = AuthContext;
@@ -112,39 +117,73 @@ export default class UserProfilePage extends Component {
         this.setState({ setShow: false })
 
     };
+    handleCloseAlert = () => {
+        this.setState({ MessageOpen: false, MessageText: '' })
+    }
     getColumn = () => {
-        const columns = [
-            {
-                ...COLUMNS.No
-            },
-
-            {
-                ...COLUMNS.ContractName
-            },
-            {
-                ...COLUMNS.Owner('', '')
-            },
-            {
-                ...COLUMNS.Counterpart('', '')
-            },
-            {
-                ...COLUMNS.Email()
-            },
-            {
-                ...COLUMNS.Action(this.handleEdit, this.handleDelete, this.handleAdd)
-            }
+        const columns = [{ ...COLUMNS.No }, { ...COLUMNS.ContractName }, { ...COLUMNS.Owner('', '') },
+        { ...COLUMNS.Counterpart('', '') }, { ...COLUMNS.Email() },
+        {
+            ...COLUMNS.Action(this.handleEdit, this.handleDelete, this.handleAdd)
+        }
         ];
         return columns;
+    }
+    onEdit = async (contractId, body) => {
+        try {
+            const { token } = this.state.user;
+            const response = await Axios.put(`${CONSTANTS.ENDPOINT.CONTRACT}/${contractId}`, body, {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                }
+            });
+            let newContracts;
+            if (response.data) {
+                console.log("response update contract", response.data);
+                const oldContracts = [...this.state.contracts];
+                newContracts = oldContracts.map(contract => {
+                    if (contract._id === contractId) {
+                        return { ...response.data, no: contract.no };
+                    }
+                    return contract;
+                });
+                console.log(newContracts);
+            }
+            this.setState({ MessageOpen: true, MessageText: "Updated successful!", contracts: [...newContracts] });
+
+        } catch (error) {
+            console.log("Error", error);
+            this.setState({
+                MessageOpen: true,
+                MessageText: error.response.data.message,
+                MessageType: 'warning'
+            })
+        }
+    }
+    onAdd = async (contractId, email) => {
+        try {
+            console.log("call add user to contract", contractId, email);
+            const response = await Axios.get(`${CONSTANTS.ENDPOINT.MAIL}/invite/${contractId}&${email}`, {
+                headers: {
+                    authorization: `Bearer ${this.state.user.token}`,
+                }
+            });
+            if (response.data) {
+                this.setState({ MessageOpen: true, MessageText: response.data.message });
+            }
+        } catch (error) {
+            console.log("error add", error);
+
+            this.setState({ MessageOpen: true, MessageText: error.response.data.message });
+
+        }
     }
     render() {
         const { contracts, user } = this.state;
         return (
             <Aux>
-                {/* {this.state.loading ? <Roller color='grey' /> : null} */}
-
                 <Fragment>
                     <div className='UserProfile__page'>
-
                         <div className='UserProfile__page--table'>
                             <h1>CONTRACT</h1>
                             <ReactTable
@@ -177,15 +216,22 @@ export default class UserProfilePage extends Component {
                         show={this.state.setShow}
                         data={this.state.adding}
                         onHide={this.handleClose}
-                        handleAdd={this.handleAdd}
+                        onAdd={this.onAdd}
                     /> : null}
                     {this.state.setShow2 ? <ModalEditor
                         show={this.state.setShow2}
                         data={this.state.editting}
                         onHide={this.handleClose}
+                        onEdit={this.onEdit}
                     /> : null}
 
                 </Fragment>
+                <AlertMessage
+                    open={this.state.MessageOpen}
+                    text={this.state.MessageText}
+                    onClose={this.handleCloseAlert}
+                    type={this.state.MessageType}
+                />
             </Aux>
         )
     }
