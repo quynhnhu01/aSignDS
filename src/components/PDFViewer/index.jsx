@@ -7,9 +7,11 @@ import axios from 'axios';
 import CONSTANTS from '../../constants';
 import Aux from '../../HOC/auxiliary';
 import SaveIcon from '@material-ui/icons/Save';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles'
+import { async } from 'q';
 function configInstance(instance, file) {
     instance.loadDocument(file, file.filename);
     instance.enableElements(['leftPanel', 'leftPanelButton']);
@@ -44,7 +46,9 @@ class PDFJSExpressViewer extends Component {
             counterpartEmail: '',
             instance: null,
             isLoaded: false,
-            uploaded: false
+            uploaded: false,
+            showVerify: false,
+            verifyCode: ''
         }
     };
     componentDidMount() {
@@ -79,19 +83,39 @@ class PDFJSExpressViewer extends Component {
 
     handleClose = () => {
         this.setState({ setShow: false })
-        // console.log(this.state.id)
     }
 
     handleShow = () => {
-        console.log('a')
         this.setState({ setShow: true })
-        // console.log(this.state.id)
+    }
+
+    handleShowVerify = () => {
+        this.setState({ showVerify: true })
+    }
+
+    handleCloseVerify = () => {
+        this.setState({ showVerify: false })
     }
 
     handleChangeEmail = (e) => {
         const email = e.target.value;
         this.setState({ counterpartEmail: email })
         console.log(this.state.counterpartEmail)
+    }
+
+    handleChangeVerifyCode = (e) => {
+        const code = e.target.value;
+        this.setState({ verifyCode: code })
+    }
+
+    handleVerify = async (verifyCode) => {
+        console.log(verifyCode);
+        const response = await axios.post(CONSTANTS.ENDPOINT.VERITY, {
+            // file: pdf
+        });
+        console.log("response: " + JSON.stringify(response));
+
+        this.setState({ showVerify: false })
     }
 
     handleUpload = async (pdf) => {
@@ -151,6 +175,13 @@ class PDFJSExpressViewer extends Component {
                                 color="primary"
                                 startIcon={<SaveIcon />}
                             >Save</Button>
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                onClick={this.handleShowVerify}
+                                color="primary"
+                                startIcon={<VerifiedUserIcon />}
+                            >Verify</Button>
                         </Aux>
                         : null}
 
@@ -183,6 +214,36 @@ class PDFJSExpressViewer extends Component {
                                 color="primary"
                                 onClick={() => this.handleAddPartner(this.state.counterpartEmail)}>
                                 Save Changes
+                        </Button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
+                <div className="modal__AddEmail">
+                    <Modal show={this.state.showVerify} onHide={this.handleCloseVerify}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Add A Verify Code</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p>Enter Code </p>
+                            <input
+                                className="email"
+                                type="text"
+                                placeholder="Example: AB!@#$123"
+                                onChange={this.handleChangeVerifyCode}
+                            />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={this.handleCloseVerify}>
+                                Close
+                        </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => this.handleVerify(this.state.verifyCode)}>
+                                Verify
                         </Button>
                         </Modal.Footer>
                     </Modal>
