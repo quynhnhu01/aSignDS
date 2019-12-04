@@ -140,6 +140,10 @@ export default class UserProfilePage extends Component {
             let newContracts;
             if (response.data) {
                 console.log("response update contract", response.data);
+                if (response.data.message) {
+                    this.setState({ MessageOpen: true, MessageText: response.data.message });
+                    return;
+                }
                 const oldContracts = [...this.state.contracts];
                 newContracts = oldContracts.map(contract => {
                     if (contract._id === contractId) {
