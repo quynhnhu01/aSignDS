@@ -54,56 +54,51 @@ class PDFJSExpressViewer extends Component {
     };
     static contextType = AuthContext;
     componentDidMount() {
-        const file = this.props.file;
+        const file = this.props.location.state && this.props.location.state.file;
+        file ? this.setState({ uploaded: true }) : void 0;
+        console.log("file from location", file);
+        window.WebViewer({
+            path: '/lib',
+        }, this.viewer.current).then(instance => {
+            this.instance = instance;
+            this.docViewer = instance.docViewer;
+            this.annotManager = instance.annotManager;
+            instance.docViewer.on('documentLoaded', () => {
+                this.setState({ isLoaded: true });
+            });
+            this.instance.setAnnotationUser(this.context.user.username);
+            if (file) {
+                configInstance(instance, file);
+            }
+            this.annotManager.on("annotationChanged", (event, annotations, action) => {
+                const annots = this.annotManager.getAnnotationsList()
+                if (annots.length > 0) {
+                    this.setState({ isSigned: true });
+                    this.instance.disableTools();
+                }
+                const SignatureAnnotations = annotations.filter(annotation => annotation.Subject === 'Signature')
+                console.log("event annotationChanged", SignatureAnnotations);
+                if (SignatureAnnotations.length > 0 && SignatureAnnotations.length < 3) {
+                    if (action === 'add') {
+                        this.setState({ isSigned: true });
+                        this.instance.disableTools();
+                    }
+                    else if (action === 'delete') {
+                        this.setState({ isSigned: false });
+                        this.instance.enableTools(['AnnotationCreateSignature']);
+                    }
+                }
+            })
+        })
         if (file) this.setState({ file });
     }
     handleFileUpload = files => {
         console.log(files[0]);
-        const file = files[0]
-        this.setState({ file, uploaded: true });
-        if (!this.instance)
-            window.WebViewer({
-                path: '/lib'
-            }, this.viewer.current)
-                .then(instance => {
-                    this.instance = instance;
-                    this.docViewer = instance.docViewer;
-                    this.annotManager = instance.annotManager;
-                    console.log("instance", instance);
-                    instance.docViewer.on('documentLoaded', () => {
-                        this.setState({ isLoaded: true });
-                    });
-                    instance.setAnnotationUser(this.context.user.username);
+        const file = files[0];
+        console.log("File upload", file);
 
-                    configInstance(instance, file)
-                    this.annotManager.on("annotationChanged", (event, annotations, action) => {
-                        const annots = this.annotManager.getAnnotationsList()
-                        if (annots.length > 0) {
-                            this.setState({ isSigned: true });
-                            this.instance.disableTools();
-                        }
-                        const SignatureAnnotations = annotations.filter(annotation => annotation.Subject === 'Signature')
-                        console.log("event annotationChanged", SignatureAnnotations);
-                        if (SignatureAnnotations.length > 0 && SignatureAnnotations.length < 3) {
-                            if (action === 'add') {
-                                this.setState({ isSigned: true });
-                                this.instance.disableTools();
-                            }
-                            else if (action === 'delete') {
-                                this.setState({ isSigned: false });
-                                this.instance.enableTools(['AnnotationCreateSignature']);
-                            }
-                        }
-                        console.log(action);
-                    })
-                })
-                .catch(err => console.log(err));
-        else {
-            configInstance(this.instance, file);
-            this.docViewer.on('documentLoaded', () => {
-                this.setState({ isLoaded: true });
-            });
-        }
+        this.setState({ file, uploaded: true });
+        configInstance(this.instance, file);
     }
 
     handleClose = () => {

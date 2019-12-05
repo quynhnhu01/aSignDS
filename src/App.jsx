@@ -23,7 +23,7 @@ class App extends Component {
                     <Redirect exact path="/" to="/about" />
                     <Route path="/about" component={About} />
                     <Redirect exact path="/" to="/upload" />
-                    <Route path="/upload" component={UploadPage} />
+                    <Route path="/upload" render={(props) => <UploadPage {...props} />} />
                     <Redirect exact path="/" to="/profile" />
                     <Route path="/profile" component={UserProfilePage} />
                     {/* <PrivateRoute path="/profile" authenticated={isAuthenticated} component={UserProfilePage} /> */}

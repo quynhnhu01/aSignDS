@@ -12,11 +12,13 @@ import ModalEditor from './ModalEdit';
 import ModalAdder from './ModalAdd';
 import Aux from '../../HOC/auxiliary';
 import Axios from 'axios';
+import { withRouter } from 'react-router-dom'
+
 const ProcessBar = props => (
     <div className='-loading -active'>
         Loading...
     </div>)
-export default class UserProfilePage extends Component {
+class UserProfilePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -118,8 +120,14 @@ export default class UserProfilePage extends Component {
                 const blob = new Blob([res.data], {
                     type: "application/pdf"
                 });
-                const file = new File([blob], "contract", { type: blob.type });
+                const file = new File([blob], "contract.pdf", { type: blob.type });
                 console.log("file", file);
+                this.props.history.push({
+                    pathname: '/upload',
+                    state: {
+                        file: file
+                    }
+                });
             })
     }
     handleAddPartner = async () => {
@@ -255,3 +263,4 @@ export default class UserProfilePage extends Component {
         )
     }
 }
+export default withRouter(UserProfilePage);
