@@ -2,7 +2,7 @@ const contractModel = require('../models/contract.model');
 
 async function getAllContractForUser(userId) {
     const contracts = await contractModel
-        .find({ owner: userId })
+        .find({ $or: [{ owner: userId }, { partner: userId }] })
         .populate({
             path: 'partner',
             select: 'fullname email username'
