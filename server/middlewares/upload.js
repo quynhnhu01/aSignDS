@@ -4,7 +4,10 @@ const diskStorage = multer.diskStorage({
         callback(null, "server/storage");
     },
     filename: (req, file, callback) => {
-        callback(null, file.originalname);
+        if (file.mimetype === 'application/pdf') {
+            callback(null, file.originalname + '.pdf');
+        }
+        else callback(null, file.originalname);
     }
 });
 

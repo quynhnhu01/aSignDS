@@ -1,7 +1,7 @@
 import React from 'react';
 import matchSorter from 'match-sorter';
 import './index.scss';
-const ActionInput = ({ member, contract, handleEdit, handleDelete, handleAdd }) => {
+const ActionInput = ({ member, contract, handleEdit, handleDelete, handleAdd, handleView }) => {
     return (
         <div className="UserProfile__page--table__action">
             <div className="UserProfile__page--table__action-edit" onClick={() => handleEdit(member, contract)} style={{ cursor: 'pointer' }}>
@@ -12,6 +12,9 @@ const ActionInput = ({ member, contract, handleEdit, handleDelete, handleAdd }) 
             </div>
             <div className="UserProfile__page--table__action-delete" onClick={() => handleDelete(member, contract)} style={{ cursor: 'pointer' }}>
                 <img src="https://cdn2.iconfinder.com/data/icons/apple-inspire-white/100/Apple-64-512.png" alt="icon-delete" />
+            </div>
+            <div className="UserProfile__page--table__action-delete" onClick={() => handleView(member, contract)} style={{ cursor: 'pointer' }}>
+                <img src="eyes.png" alt="icon-view" />
             </div>
         </div>
     )
@@ -88,7 +91,7 @@ const Email = () => {
         filterAll: true,
     }
 };
-const Action = (handleEdit, handleDelete, handleAdd) => {
+const Action = (handleEdit, handleDelete, handleAdd, handleView) => {
     return {
         Header: 'Action',
         id: 'action',
@@ -101,10 +104,14 @@ const Action = (handleEdit, handleDelete, handleAdd) => {
                 handleEdit={handleEdit}
                 handleAdd={handleAdd}
                 handleDelete={handleDelete}
+                handleView={handleView}
             />) : (
                     <div className="UserProfile__page--table__action">
                         <div className="UserProfile__page--table__action-add" onClick={() => handleAdd(props.original)} style={{ cursor: 'pointer' }} >
                             <img src="https://cdn4.iconfinder.com/data/icons/ios7-essence/22/add_plus-512.png" alt="icon-add" />
+                        </div>
+                        <div className="UserProfile__page--table__action-delete" onClick={() => handleView(props.original)} style={{ cursor: 'pointer' }}>
+                            <img src="eyes.png" alt="icon-view" />
                         </div>
                     </div>
                 )

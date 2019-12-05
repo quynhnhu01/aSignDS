@@ -2,15 +2,42 @@ const uuid = require('uuid');
 const fs = require('fs');
 const ContractService = require('../services/contract.service');
 async function getContract(req, res) {
-    const contracts = await ContractService.GetAllContracts();
-    res.json({ data: contracts });
+    if (!req.params.id) {
+        const contracts = await ContractService.GetAllContracts();
+        return res.json({ data: contracts });
+    }
+    else {
+        //
+        const contract = await ContractService.GetContractById(req.params.id);
+        if (contract) {
+            console.log("get contract by id", contract);
+            try {
+                if (!fs.existsSync(contract.contractUrl)) {
+                    return res.json({ message: "Not found file contract" });
+                }
+                let file = fs.createReadStream(contract.contractUrl);
+                file.on('error', err => {
+                    console.log("readStream error", err);
+                    // return res.json({ message: err.message })
+                })
+                let stat = fs.statSync(contract.contractUrl);
+                res.setHeader('Content-Length', stat.size);
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `attachment; filename=${contract.nameContract}.pdf`);//inline to attachment
+                file.pipe(res);
+            } catch (error) {
+                return res.json({ message: error.message });
+            }
+        }
+        else return res.json({ message: "Not found contract" });
+    }
 };
 
 async function createContract(req, res) {
     console.log(req.file);
     if (!req.file) return res.json({ message: 'Missing file', error: 'Missing file', success: false });
-    const fileURL = `${__dirname}\\${req.file.filename}`;
-    if (fs.existsSync(fileURL)) return res.json({ message: 'File already exists', error: null, success: false });
+    const fileURL = `${req.file.path}`;
+    // if (fs.existsSync(fileURL)) return res.json({ message: 'File already exists', error: null, success: false });
     const newContract = {};
     newContract.nameContract = `contract-${uuid.v4().slice(0, 8)}`;
     newContract.owner = req.user.id;
@@ -20,6 +47,7 @@ async function createContract(req, res) {
     newContract.contractUrl = fileURL;
     newContract.fileName = req.file.filename;
     newContract.isFinished = false;
+    newContract.isLocked = false;
     const result = await ContractService.CreateNewContract(newContract);
     if (result) return res.json({ data: result });
 };

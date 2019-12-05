@@ -5,8 +5,7 @@ export default class UploadPage extends Component {
     render() {
         return (
             <div className="UploadPage">
-                <PDFJSExpressViewer className="UploadPage__PDF"/>
-               
+                <PDFJSExpressViewer className="UploadPage__PDF" />
             </div>
         )
     }

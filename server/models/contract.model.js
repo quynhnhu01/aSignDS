@@ -9,6 +9,7 @@ const contractSchema = mongoose.Schema({
     updatedAt: String,
     fileName: String,
     isFinished: Boolean,
+    isLocked: Boolean
 });
 const contractModel = mongoose.model("contract", contractSchema);
 module.exports = contractModel;

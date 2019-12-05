@@ -97,16 +97,31 @@ export default class UserProfilePage extends Component {
     }
 
     handleChange = (e) => {
-        // const index = this.state.index;
-        // const newData = [...this.state.data];
-        // newData[index][e.target.name] = e.target.value
-        // this.setState({ data: newData })
         const { index, contracts } = this.state;
         const newContracts = [...contracts];
         newContracts[index][e.target.name] = e.target.value;
         this.setState({ contracts: newContracts })
     }
-
+    handleView = async (contract) => {
+        axios(`${CONSTANTS.ENDPOINT.CONTRACT}/${contract._id}`, {
+            responseType: "blob",
+            method: "get",
+        })
+            .then(async res => {
+                if (res.data.type === "application/json") {
+                    console.log("response file:", res.data.text());
+                    const text = await res.data.text();
+                    const json = JSON.parse(text);
+                    this.setState({ MessageOpen: true, MessageText: json.message, MessageType: "warning" });
+                    return;
+                }
+                const blob = new Blob([res.data], {
+                    type: "application/pdf"
+                });
+                const file = new File([blob], "contract", { type: blob.type });
+                console.log("file", file);
+            })
+    }
     handleAddPartner = async () => {
         const id = this.state.id;
         const newData = [...this.state.data];
@@ -124,7 +139,7 @@ export default class UserProfilePage extends Component {
         const columns = [{ ...COLUMNS.No }, { ...COLUMNS.ContractName }, { ...COLUMNS.Owner('', '') },
         { ...COLUMNS.Counterpart('', '') }, { ...COLUMNS.Email() },
         {
-            ...COLUMNS.Action(this.handleEdit, this.handleDelete, this.handleAdd)
+            ...COLUMNS.Action(this.handleEdit, this.handleDelete, this.handleAdd, this.handleView)
         }
         ];
         return columns;
