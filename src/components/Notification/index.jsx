@@ -23,9 +23,9 @@ class Notification extends Component {
                     onClick={this.handleNotification}
                     className="notification"
                     src="https://cdn0.iconfinder.com/data/icons/ui-fill-glyphs/20/bell-512.png"
-                    alt=""
+                    alt="bell"
                 />
-                { showNotification ? (
+                {showNotification ? (
                     <MDBContainer
                         style={{
                             width: "auto",

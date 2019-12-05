@@ -3,6 +3,11 @@
 # vscode configuration
 .vscode/
 
+#WebViewer
+public/lib
+public/license-key.js
+WebViewer.zip
+
 # testing
 /coverage
 

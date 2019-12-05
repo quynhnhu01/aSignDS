@@ -1,62 +1,68 @@
 {
-  "name": "aSignDS",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.7.1",
-    "antd": "^3.25.0",
-    "axios": "^0.19.0",
-    "bcrypt": "^3.0.6",
-    "body-parser": "^1.18.3",
-    "bootstrap": "^4.3.1",
-    "class-validator": "^0.11.0",
-    "classnames": "^2.2.6",
-    "cookie-parser": "^1.4.3",
-    "cors": "^2.8.5",
-    "date-fns": "^2.4.1",
-    "debug": "~4.1.1",
-    "express": "^4.16.4",
-    "fs-extra": "8.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "match-sorter": "^4.0.2",
-    "material-ui-dropzone": "^2.4.7",
-    "mdbreact": "^4.23.0",
-    "mongoose": "^5.7.3",
-    "morgan": "^1.9.1",
-    "multer": "^1.4.2",
-    "node-rsa": "^1.0.6",
-    "node-sass": "^4.13.0",
-    "nodemailer": "^6.3.1",
-    "react": "^16.8.4",
-    "react-bootstrap": "^1.0.0-beta.14",
-    "react-dom": "^16.8.4",
-    "react-pdf": "^4.1.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.0.1",
-    "react-table": "^6.10.3",
-    "styled-components": "^4.4.1",
-    "uuid": "^3.3.3"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "devDependencies": {
-    "concurrently": "^4.1.0",
-    "nodemon": "^1.18.10"
-  },
-  "scripts": {
-    "start": "concurrently \"yarn start-frontend || npm run start-frontend\" \"yarn start-backend || npm run start-backend\"",
-    "start-backend": "nodemon server/server.js",
-    "start-frontend": "react-scripts start",
-    "build": "node ./buildScript",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "proxy": "http://localhost:3001",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "name": "aSignDS",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@material-ui/core": "^4.7.1",
+        "antd": "^3.25.0",
+        "axios": "^0.19.0",
+        "bcrypt": "^3.0.6",
+        "body-parser": "^1.18.3",
+        "bootstrap": "^4.3.1",
+        "class-validator": "^0.11.0",
+        "classnames": "^2.2.6",
+        "cookie-parser": "^1.4.3",
+        "cors": "^2.8.5",
+        "date-fns": "^2.4.1",
+        "debug": "~4.1.1",
+        "express": "^4.16.4",
+        "fs-extra": "8.1.0",
+        "jsonwebtoken": "^8.5.1",
+        "match-sorter": "^4.0.2",
+        "material-ui-dropzone": "^2.4.7",
+        "mdbreact": "^4.23.0",
+        "mongoose": "^5.7.3",
+        "morgan": "^1.9.1",
+        "multer": "^1.4.2",
+        "node-rsa": "^1.0.6",
+        "node-sass": "^4.13.0",
+        "nodemailer": "^6.3.1",
+        "react": "^16.8.4",
+        "react-bootstrap": "^1.0.0-beta.14",
+        "react-dom": "^16.8.4",
+        "react-pdf": "^4.1.0",
+        "react-router-dom": "^5.1.2",
+        "react-scripts": "^3.0.1",
+        "react-table": "^6.10.3",
+        "styled-components": "^4.4.1",
+        "uuid": "^3.3.3"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "devDependencies": {
+        "concurrently": "^4.1.0",
+        "nodemon": "^1.18.10",
+        "@pdftron/webviewer-downloader": "^1.0.7",
+        "btoa": "^1.2.1",
+        "download": "^7.1.0",
+        "fs-extra": "^7.0.1"
+    },
+    "scripts": {
+        "start": "concurrently \"yarn start-frontend || npm run start-frontend\" \"yarn start-backend || npm run start-backend\"",
+        "start-backend": "nodemon server/server.js",
+        "start-frontend": "react-scripts start",
+        "build": "node ./buildScript",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "postinstall": "npm run download-webviewer",
+        "download-webviewer": "npx @pdftron/webviewer-downloader"
+    },
+    "proxy": "http://localhost:3001",
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ]
 }

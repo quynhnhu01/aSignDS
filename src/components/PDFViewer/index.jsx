@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Modal, Input } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import { DropzoneArea } from 'material-ui-dropzone';
-import Icon from '@material-ui/core/Icon';
 import axios from 'axios';
 import CONSTANTS from '../../constants';
 import Aux from '../../HOC/auxiliary';
@@ -10,16 +9,13 @@ import SaveIcon from '@material-ui/icons/Save';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AddIcon from '@material-ui/icons/Add';
-import { withStyles } from '@material-ui/core/styles'
-import { async } from 'q';
+import { withStyles } from '@material-ui/core/styles';
+import { AuthContext } from '../../contexts/auth.context'
 function configInstance(instance, file) {
     instance.loadDocument(file, file.filename);
     instance.enableElements(['leftPanel', 'leftPanelButton']);
     const FitMode = instance.FitMode;
     instance.setFitMode(FitMode.Zoom);
-    var Feature = instance.Feature;
-    instance.enableFeatures([Feature.Download]);
-    instance.disableFeatures([Feature.Copy]);
     instance.disableTools();
     instance.enableTools(['AnnotationCreateSignature']);
 }
@@ -49,33 +45,38 @@ class PDFJSExpressViewer extends Component {
             uploaded: false,
             showVerify: false,
             verifyCode: ''
-        }
+        };
+        this.instance = null;
+        this.docViewer = null;
+        this.annotManager = null;
     };
+    static contextType = AuthContext;
     componentDidMount() {
-
     }
     handleFileUpload = files => {
         console.log(files[0]);
         const file = files[0]
         this.setState({ file, uploaded: true });
-        if (!this.state.instance)
+        if (!this.instance)
             window.WebViewer({
-                path: '/pdfjsexpress'
+                path: '/lib'
             }, this.viewer.current)
                 .then(instance => {
                     console.log("instance", instance);
                     instance.docViewer.on('documentLoaded', () => {
                         this.setState({ isLoaded: true });
                     });
-                    this.setState({ instance });
+                    instance.setAnnotationUser(this.context.user.username);
+                    this.instance = instance;
+                    this.docViewer = instance.docViewer;
+                    this.annotManager = instance.annotManager;
                     configInstance(instance, file)
 
                 })
                 .catch(err => console.log(err));
         else {
-            const { instance } = this.state;
-            configInstance(instance, file);
-            instance.docViewer.on('documentLoaded', () => {
+            configInstance(this.instance, file);
+            this.docViewer.on('documentLoaded', () => {
                 this.setState({ isLoaded: true });
             });
         }
@@ -118,10 +119,21 @@ class PDFJSExpressViewer extends Component {
         this.setState({ showVerify: false })
     }
 
-    handleUpload = async (pdf) => {
-        console.log(pdf);
-        if (this.state.isLoaded)
-            this.state.instance.downloadPdf(true);
+    handleSave = async (pdf) => {
+        if (this.state.isLoaded) {
+            const doc = this.docViewer.getDocument();
+            // include annotations with the document
+            const options = {
+                xfdfString: this.annotManager.exportAnnotations()
+            };
+            doc.getFileData(options).then(data => {
+                const arr = new Uint8Array(data);
+                const blob = new Blob([arr], { type: 'application/pdf' });
+                // upload blob to your server
+                console.log("prepared upload", blob);
+            });
+        }
+
     };
 
     handleAddPartner = async (partner) => {
@@ -135,7 +147,7 @@ class PDFJSExpressViewer extends Component {
 
     };
     handleAddAnother = () => {
-        this.state.instance.closeDocument().then(() => {
+        this.instance.closeDocument().then(() => {
             console.log('closeDocument');
             this.setState({ uploaded: false, isLoaded: false });
         })
@@ -171,7 +183,7 @@ class PDFJSExpressViewer extends Component {
                             <Button
                                 className={classes.button}
                                 variant="contained"
-                                onClick={() => this.handleUpload(this.state.file)}
+                                onClick={() => this.handleSave(this.state.file)}
                                 color="primary"
                                 startIcon={<SaveIcon />}
                             >Save</Button>
