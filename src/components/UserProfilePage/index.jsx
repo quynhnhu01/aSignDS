@@ -126,23 +126,22 @@ class UserProfilePage extends Component {
                     authorization: `Bearer ${token}`,
                 }
             });
-            let newContracts;
             if (response.data) {
                 console.log("response update contract", response.data);
                 if (response.data.message) {
                     this.setState({ MessageOpen: true, MessageText: response.data.message });
                     return;
                 }
-                const oldContracts = [...this.state.contracts];
-                newContracts = oldContracts.map(contract => {
-                    if (contract._id === contractId) {
-                        return { ...response.data, no: contract.no };
-                    }
-                    return contract;
-                });
-                console.log(newContracts);
+                const cloneContracts = [...this.state.contracts];
+                const index = cloneContracts.findIndex(contract => contract._id === contractId);
+                if (~index) {
+                    cloneContracts[index] = {
+                        ...response.data,
+                        no: cloneContracts[index].no
+                    };
+                    this.setState({ MessageOpen: true, MessageText: "Updated successful!", contracts: cloneContracts });
+                }
             }
-            this.setState({ MessageOpen: true, MessageText: "Updated successful!", contracts: [...newContracts] });
 
         } catch (error) {
             console.log("Error", error);

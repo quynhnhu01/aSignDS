@@ -91,7 +91,7 @@ async function updateContract(req, res) {
         annotations: body.annotations,
         updatedAt: Date.now()
     }
-    Object.keys(update).forEach((key) => (update[key] == null) && delete update[key]);
+    Object.keys(update).forEach((key) => (update[key] == null || update[key] == '') && delete update[key]);
     const contract = await ContractService.GetContractById(id);
     if (contract.owner.toString() !== req.user.id && (update.partner || update.nameContract)) {
         return res.json({ message: 'You are not have permission to modify', error: null, success: false });
