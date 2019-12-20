@@ -8,8 +8,8 @@ import AlertMessage from '../AlertMessage';
 import CONSTANTS from '../../constants';
 import 'react-table/react-table.css';
 import COLUMNS from './columns';
-import ModalEditor from './ModalEdit';
-import ModalAdder from './ModalAdd';
+import ModalEditor from '../Modal/ModalEdit';
+import ModalAdder from '../Modal/ModalAdd';
 import Aux from '../../HOC/auxiliary';
 import Axios from 'axios';
 import { withRouter } from 'react-router-dom'
