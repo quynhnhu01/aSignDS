@@ -41,12 +41,12 @@ class PDFJSExpressViewer extends Component {
             file: null,
             setShow: false,
             counterpartEmail: '',
-            instance: null,
             isLoaded: false,
             uploaded: false,
             showVerify: false,
             verifyCode: '',
-            isSigned: false
+            isSigned: false,
+            contract: null
         };
         this.instance = null;
         this.docViewer = null;
@@ -54,9 +54,13 @@ class PDFJSExpressViewer extends Component {
     };
     static contextType = AuthContext;
     componentDidMount() {
-        const file = this.props.location.state && this.props.location.state.file;
-        file ? this.setState({ uploaded: true }) : void 0;
-        console.log("file from location", file);
+        let file, contract;
+        if (this.props.location.state) {
+            file = this.props.location.state.file;
+            contract = this.props.location.state.contract;
+            file && contract && this.setState({ uploaded: true, contract });
+        }
+        console.log("contract from location", contract);
         window.WebViewer({
             path: '/lib',
         }, this.viewer.current).then(instance => {
@@ -65,38 +69,18 @@ class PDFJSExpressViewer extends Component {
             this.annotManager = instance.annotManager;
             instance.docViewer.on('documentLoaded', () => {
                 this.setState({ isLoaded: true });
+                const { contract } = this.state;
+                contract && this.annotManager.importAnnotations(contract.annotations);
             });
-            this.instance.setAnnotationUser(this.context.user.username);
+            this.annotManager.setCurrentUser(this.context.user.username);
             if (file) {
                 configInstance(instance, file);
             }
-            this.annotManager.on("annotationChanged", (event, annotations, action) => {
-                const annots = this.annotManager.getAnnotationsList()
-                if (annots.length > 0) {
-                    this.setState({ isSigned: true });
-                    this.instance.disableTools();
-                }
-                const SignatureAnnotations = annotations.filter(annotation => annotation.Subject === 'Signature')
-                console.log("event annotationChanged", SignatureAnnotations);
-                if (SignatureAnnotations.length > 0 && SignatureAnnotations.length < 3) {
-                    if (action === 'add') {
-                        this.setState({ isSigned: true });
-                        this.instance.disableTools();
-                    }
-                    else if (action === 'delete') {
-                        this.setState({ isSigned: false });
-                        this.instance.enableTools(['AnnotationCreateSignature']);
-                    }
-                }
-            })
         })
         if (file) this.setState({ file });
     }
     handleFileUpload = files => {
-        console.log(files[0]);
         const file = files[0];
-        console.log("File upload", file);
-
         this.setState({ file, uploaded: true });
         configInstance(this.instance, file);
     }
@@ -139,31 +123,43 @@ class PDFJSExpressViewer extends Component {
     }
 
     handleSave = async (pdf) => {
-        if (this.state.isLoaded && this.state.isSigned) {
+        if (this.state.isLoaded) {
             const doc = this.docViewer.getDocument();
-            const options = {
-                xfdfString: this.annotManager.exportAnnotations()
-            };
-            doc.getFileData(options).then(data => {
-                const arr = new Uint8Array(data);
-                const blob = new Blob([arr], { type: 'application/pdf' });
-                // upload blob to your server
-                console.log("prepared upload", blob);
-                const formData = new FormData();
-                formData.append('contract', blob);
-                Axios.post(`${CONSTANTS.ENDPOINT.CONTRACT}`, formData, {
+            const xfdfString = await this.annotManager.exportAnnotations()
+            console.log(xfdfString);
+            if (!this.state.contract) { //create new contract - upload file & create annotations
+                doc.getFileData().then(data => {
+                    const arr = new Uint8Array(data);
+                    const blob = new Blob([arr], { type: 'application/pdf' });
+                    // upload blob to your server
+                    const formData = new FormData();
+                    formData.append('contract', blob);
+                    formData.append('annotations', xfdfString);
+                    Axios.post(`${CONSTANTS.ENDPOINT.CONTRACT}`, formData, {
+                        headers: {
+                            authorization: `Bearer ${this.context.user.token}`
+                        }
+                    })
+                        .then(response => {
+                            console.log("response save contract", response.data);
+                        })
+                        .catch(error => console.log(error));
+                });
+            }
+            else { // update annotations for contract 
+                const { contract } = this.state;
+                const response = await Axios.put(`${CONSTANTS.ENDPOINT.CONTRACT}/${contract._id}`, {
+                    annotations: xfdfString
+                }, {
                     headers: {
                         authorization: `Bearer ${this.context.user.token}`
                     }
-                })
-                    .then(response => {
-                        console.log("save blob pdf", response.data);
-                    })
-                    .catch(error => console.log(error));
-            });
+                });
+                console.log("response update annotations", response.data);
+            }
         }
         else {
-            alert("Please provide signature");
+            alert("Doc is loading");
             return;
         }
     };
@@ -181,7 +177,7 @@ class PDFJSExpressViewer extends Component {
     handleAddAnother = () => {
         this.instance.closeDocument().then(() => {
             console.log('closeDocument');
-            this.setState({ uploaded: false, isLoaded: false });
+            this.setState({ uploaded: false, isLoaded: false, contract: null });
         })
     }
     render() {

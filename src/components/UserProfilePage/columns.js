@@ -13,7 +13,7 @@ const ActionInput = ({ member, contract, handleEdit, handleDelete, handleAdd, ha
             <div className="UserProfile__page--table__action-delete" onClick={() => handleDelete(member, contract)} style={{ cursor: 'pointer' }}>
                 <img src="https://cdn2.iconfinder.com/data/icons/apple-inspire-white/100/Apple-64-512.png" alt="icon-delete" />
             </div>
-            <div className="UserProfile__page--table__action-delete" onClick={() => handleView(member, contract)} style={{ cursor: 'pointer' }}>
+            <div className="UserProfile__page--table__action-delete" onClick={() => handleView(contract)} style={{ cursor: 'pointer' }}>
                 <img src="eyes.png" alt="icon-view" />
             </div>
         </div>

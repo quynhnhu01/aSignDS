@@ -9,6 +9,7 @@ const userSchema = mongoose.Schema({
     dob: Date,
     publicKey: String,
     privateKey: String,
+    signatureAnnotations: Array
 });
 const userModel = mongoose.model("users", userSchema);
 module.exports = userModel;

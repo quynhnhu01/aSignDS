@@ -111,8 +111,8 @@ class UserProfilePage extends Component {
         })
             .then(async res => {
                 if (res.data.type === "application/json") {
-                    console.log("response file:", res.data.text());
                     const text = await res.data.text();
+                    console.log("response file:", text);
                     const json = JSON.parse(text);
                     this.setState({ MessageOpen: true, MessageText: json.message, MessageType: "warning" });
                     return;
@@ -125,7 +125,7 @@ class UserProfilePage extends Component {
                 this.props.history.push({
                     pathname: '/upload',
                     state: {
-                        file: file
+                        file, contract
                     }
                 });
             })

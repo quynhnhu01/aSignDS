@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const fs = require('fs');
 const ContractService = require('../services/contract.service');
+const UserService = require('../services/user.service');
 async function getContract(req, res) {
     if (!req.params.id) {
         const contracts = await ContractService.GetAllContracts();
@@ -10,7 +11,6 @@ async function getContract(req, res) {
         //
         const contract = await ContractService.GetContractById(req.params.id);
         if (contract) {
-            console.log("get contract by id", contract);
             try {
                 if (!fs.existsSync(contract.contractUrl)) {
                     return res.json({ message: "Not found file contract" });
@@ -34,22 +34,33 @@ async function getContract(req, res) {
 };
 
 async function createContract(req, res) {
-    console.log(req.file);
+    // console.log(req.file);
+    const user = req.user;
     if (!req.file) return res.json({ message: 'Missing file', error: 'Missing file', success: false });
     const fileURL = `${req.file.path}`;
     // if (fs.existsSync(fileURL)) return res.json({ message: 'File already exists', error: null, success: false });
     const newContract = {};
-    newContract.nameContract = `contract-${uuid.v4().slice(0, 8)}`;
-    newContract.owner = req.user.id;
-    // newContract.partner = "";
+    const annotations = req.body.annotations;
+    newContract.nameContract = `Contract of ${user.username}-${uuid.v4().slice(0, 8)}`;
+    newContract.owner = user.id;
     newContract.createdAt = Date.now();
     newContract.updatedAt = Date.now();
     newContract.contractUrl = fileURL;
     newContract.fileName = req.file.filename;
     newContract.isFinished = false;
     newContract.isLocked = false;
-    const result = await ContractService.CreateNewContract(newContract);
-    if (result) return res.json({ data: result });
+    newContract.annotations = annotations ? annotations : '';
+    const createdContract = await ContractService.CreateNewContract(newContract);
+    if (createdContract) {
+        // if (signature) {
+        //     //TODO Create Signature Annotations
+        //     // const createdSignature = await UserService.UpdateSignatureAnnotations(user.id, createdContract.id, signature);
+        //     // const createdSignature = await ContractService.UpdateContract(createdContract.id,{})
+        //     if (!createdSignature)
+        //         throw new Error({ message: 'Cannot update signature for user', error: 'Update signature failed' })
+        // }
+        return res.json({ data: createdContract });
+    }
 };
 
 async function deleteContract(req, res) {
@@ -74,17 +85,15 @@ async function deleteContract(req, res) {
 async function updateContract(req, res) {
     const id = req.params.id;
     const body = req.body;
-    if (!body.nameContract && !body.partner) {
-        return res.json({ message: "Invalid body", success: false, error: null })
-    }
     const update = {
         partner: body.partner,
         nameContract: body.nameContract,
+        annotations: body.annotations,
         updatedAt: Date.now()
     }
     Object.keys(update).forEach((key) => (update[key] == null) && delete update[key]);
     const contract = await ContractService.GetContractById(id);
-    if (contract.owner.toString() !== req.user.id) {
+    if (contract.owner.toString() !== req.user.id && (update.partner || update.nameContract)) {
         return res.json({ message: 'You are not have permission to modify', error: null, success: false });
     }
     const updatedContract = await ContractService.UpdateContract(id, update);
@@ -94,13 +103,27 @@ async function updateContract(req, res) {
         return res.json(updatedContract);
     }
     else {
-        return res.json({ message: 'Not found contract', success: false, error: null });
+        return res.json({ message: 'Cannot update contract', success: false, error: null });
     }
 };
+async function createSignatureAnnotation(req, res) {
+    try {
+        const user = req.user;
+        const signature = req.body.signature;
+        const contractId = req.body.contractId;
+        const createdSignature = await UserService.UpdateSignatureAnnotations(user.id, contractId, signature);
+        if (createdSignature) {
+            return res.json({ message: 'Created Signature', error: null });
+        }
+        else throw new Error({ message: 'Failed to create signature', error: 'Create signature failed' });
 
+    } catch (error) {
+        return res.json({ message: error.message, error: error.name, success: false })
+    }
+}
 module.exports = {
     getContract,
     createContract,
     deleteContract,
-    updateContract
+    updateContract,
 }
