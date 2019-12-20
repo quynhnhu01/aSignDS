@@ -64,8 +64,37 @@ class UserProfilePage extends Component {
         }
     }
 
-    handleDelete = (member, contract) => {
-        console.log("handleDelete", member, contract);
+    handleDelete = async (member, contract) => {
+        try {
+            const response = await Axios.delete(`${CONSTANTS.ENDPOINT.CONTRACT}/${contract._id}`, {
+                headers: {
+                    authorization: `Bearer ${this.context.user.token}`
+                }
+            });
+            console.log(response.data);
+            const { data } = response;
+            if (data.success) {
+                const cloneContracts = [...this.state.contracts];
+                const newContracts = cloneContracts.filter(contract => contract._id !== data.data._id);
+                this.setState({
+                    MessageOpen: true,
+                    MessageText: data.message,
+                    MessageType: "success",
+                    contracts: newContracts
+                });
+            }
+            else {
+                this.setState({
+                    MessageOpen: true,
+                    MessageText: data.message,
+                    MessageType: "warning",
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+
+        }
     }
 
     handleEdit = (member, contract) => {

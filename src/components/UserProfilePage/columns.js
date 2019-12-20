@@ -110,6 +110,9 @@ const Action = (handleEdit, handleDelete, handleAdd, handleView) => {
                         <div className="UserProfile__page--table__action-add" onClick={() => handleAdd(props.original)} style={{ cursor: 'pointer' }} >
                             <img src="https://cdn4.iconfinder.com/data/icons/ios7-essence/22/add_plus-512.png" alt="icon-add" />
                         </div>
+                        <div className="UserProfile__page--table__action-delete" onClick={() => handleDelete('', props.original)} style={{ cursor: 'pointer' }}>
+                            <img src="https://cdn2.iconfinder.com/data/icons/apple-inspire-white/100/Apple-64-512.png" alt="icon-delete" />
+                        </div>
                         <div className="UserProfile__page--table__action-delete" onClick={() => handleView(props.original)} style={{ cursor: 'pointer' }}>
                             <img src="eyes.png" alt="icon-view" />
                         </div>

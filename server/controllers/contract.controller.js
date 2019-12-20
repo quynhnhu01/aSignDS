@@ -51,34 +51,26 @@ async function createContract(req, res) {
     newContract.isLocked = false;
     newContract.annotations = annotations ? annotations : '';
     const createdContract = await ContractService.CreateNewContract(newContract);
-    if (createdContract) {
-        // if (signature) {
-        //     //TODO Create Signature Annotations
-        //     // const createdSignature = await UserService.UpdateSignatureAnnotations(user.id, createdContract.id, signature);
-        //     // const createdSignature = await ContractService.UpdateContract(createdContract.id,{})
-        //     if (!createdSignature)
-        //         throw new Error({ message: 'Cannot update signature for user', error: 'Update signature failed' })
-        // }
-        return res.json({ data: createdContract });
-    }
+    if (createdContract) return res.json({ data: createdContract });
 };
 
 async function deleteContract(req, res) {
     console.log("id", req.params.id);
-    const contractDelete = await ContractService.DeleteContract(req.params.id);
-    console.log(contractDelete);
-
-    if (contractDelete) {
-        fs.unlink('server/storage/' + contractDelete.fileName, function (err) { // xóa file trong folder
+    const contract = await ContractService.GetContractById(req.params.id);
+    if (contract.owner.toString() !== req.user.id)
+        return res.json({ success: false, message: "You don\'t have permission to delete this contract", error: null })
+    const contractDeleted = await ContractService.DeleteContract(req.params.id);
+    if (contractDeleted) {
+        fs.unlink('server/storage/' + contractDeleted.fileName, function (err) { // xóa file trong folder
             if (err) {
                 console.log("error while deleting file", err);
                 return res.json({ message: err.message, success: false, error: err.name });
             }
-            return res.json({ success: true, message: "File deleted", error: null })
+            return res.json({ success: true, message: "Successfully delete contract", error: null, data: contractDeleted })
         });
     }
     else {
-        return res.json({ success: false, message: "Not found contract file", error: null })
+        return res.json({ success: false, message: "Not found your contract file", error: null })
     }
 };
 
@@ -106,21 +98,6 @@ async function updateContract(req, res) {
         return res.json({ message: 'Cannot update contract', success: false, error: null });
     }
 };
-async function createSignatureAnnotation(req, res) {
-    try {
-        const user = req.user;
-        const signature = req.body.signature;
-        const contractId = req.body.contractId;
-        const createdSignature = await UserService.UpdateSignatureAnnotations(user.id, contractId, signature);
-        if (createdSignature) {
-            return res.json({ message: 'Created Signature', error: null });
-        }
-        else throw new Error({ message: 'Failed to create signature', error: 'Create signature failed' });
-
-    } catch (error) {
-        return res.json({ message: error.message, error: error.name, success: false })
-    }
-}
 module.exports = {
     getContract,
     createContract,

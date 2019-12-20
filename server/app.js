@@ -6,12 +6,12 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require('dotenv').config();
-const { PROD_URI } = require("./constants");
+const { PROD_URI, DEV_URI } = require("./constants");
 
 const { userRouter, gridRouter, emailRouter, contractRouter, verifyRouter } = require("./routes/index");
 
 const app = express();
-mongoose.connect(PROD_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err) => {
+mongoose.connect(DEV_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err) => {
     if (!err) console.log("Connected to MongoDB");
     else console.log("Error connecting:", err);
 });
