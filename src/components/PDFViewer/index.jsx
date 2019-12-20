@@ -14,6 +14,7 @@ import Axios from 'axios';
 import AlertMessage from '../AlertMessage';
 
 import ModalAdder from '../Modal/ModalAdd';
+import If from '../../helpers/If';
 function configInstance(instance, file, isSigned) {
     instance.loadDocument(file, file.filename);
     instance.enableElements(['leftPanel', 'leftPanelButton']);
@@ -42,11 +43,9 @@ class PDFJSExpressViewer extends Component {
         this.state = {
             file: null,
             setShow: false,
-            counterpartEmail: '',
             isLoaded: false,
             uploaded: false,
             showVerify: false,
-            verifyCode: '',
             isSigned: false,
             contract: null,
             MessageType: 'warning',
@@ -101,32 +100,6 @@ class PDFJSExpressViewer extends Component {
     handleShowVerify = () => {
         this.setState({ showVerify: true })
     }
-
-    handleCloseVerify = () => {
-        this.setState({ showVerify: false })
-    }
-
-    handleChangeEmail = (e) => {
-        const email = e.target.value;
-        this.setState({ counterpartEmail: email })
-        console.log(this.state.counterpartEmail)
-    }
-
-    handleChangeVerifyCode = (e) => {
-        const code = e.target.value;
-        this.setState({ verifyCode: code })
-    }
-
-    handleVerify = async (verifyCode) => {
-        console.log(verifyCode);
-        const response = await axios.post(CONSTANTS.ENDPOINT.VERITY, {
-            // file: pdf
-        });
-        console.log("response: " + JSON.stringify(response));
-
-        this.setState({ showVerify: false })
-    }
-
     handleSave = async (pdf) => {
         if (this.state.isLoaded) {
             const doc = this.docViewer.getDocument();
@@ -200,7 +173,6 @@ class PDFJSExpressViewer extends Component {
         const { classes } = this.props;
         return (
             <div style={{ width: '100%', height: '100%', display: 'inline-block' }}>
-                {/* <input type="file" accept='.pdf' onChange={this.handleFileUpload} /> */}
                 {!this.state.uploaded ?
                     <div style={{ padding: '50px', borderRadius: '5px' }}>
                         <DropzoneArea
@@ -233,12 +205,12 @@ class PDFJSExpressViewer extends Component {
                             >Save</Button>
                         </Aux>
                         : null}
-                {this.state.setShow ? <ModalAdder
-                    show={this.state.setShow}
-                    data={this.state.contract}
-                    onHide={this.handleClose}
-                    onAdd={this.onAdd}
-                /> : null}
+                <If condition={this.state.setShow} component={ModalAdder} props={{
+                    show: this.state.setShow,
+                    data: this.state.contract,
+                    onHide: this.handleClose,
+                    onAdd: this.onAdd
+                }} />
                 <div style={{ height: '85vh' }} ref={this.viewer}> </div>
                 <AlertMessage
                     open={this.state.MessageOpen}

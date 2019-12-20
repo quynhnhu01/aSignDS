@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import './index.scss'
 import { AuthContext } from "../../contexts/auth.context";
 import { Avatar } from 'antd';
@@ -51,7 +51,6 @@ class UserProfilePage extends Component {
                     authorization: "Bearer " + token
                 }
             });
-            console.log('contract user', response.data);
             const { data } = response.data;
             const dataState = data.map((contract, index) => {
                 return {
@@ -191,61 +190,58 @@ class UserProfilePage extends Component {
         const { contracts, user } = this.state;
         return (
             <Aux>
-                <Fragment>
-                    <Button
-                        variant="contained"
-                        onClick={() => this.handleShowVerify()}
-                        color="primary"
-                        startIcon={<VerifiedUserIcon />}
-                    >Verify</Button>
-                    <div className='UserProfile__page'>
-                        <div className='UserProfile__page--table'>
-                            <h1>CONTRACT</h1>
-                            <ReactTable
-                                data={contracts}
-                                columns={this.getColumn()}
-                                className="-striped -highlight"
-                                defaultPageSize={5}
-                                loading={this.state.loading}
-                                LoadingComponent={() => this.state.loading ? <ProcessBar /> : null}
-                            />
-                        </div>
-                        <div className='UserProfile__page--profile'>
-                            <div className="container">
-                                <h1>PROFILE</h1>
-
-                                <div>
-                                    <Avatar size={64} icon="user" />
-                                    <h5 ><strong id="user-name">{user.username}</strong></h5>
-                                    <p id="user-frid">{user.address || 'Address'} </p>
-                                    <p id="user-email">{user.email}</p>
-                                    <p ><strong>A/C status: </strong><span className="tags" id="user-status">Active</span></p>
-                                    <p ><strong>Job role</strong></p>
-                                    <p id="user-role">user</p>
-                                </div>
-                            </div>
-
-                        </div>
+                <Button
+                    variant="contained"
+                    onClick={() => this.handleShowVerify()}
+                    color="primary"
+                    startIcon={<VerifiedUserIcon />}
+                >Verify</Button>
+                <div className='UserProfile__page'>
+                    <div className='UserProfile__page--table'>
+                        <h1>CONTRACT</h1>
+                        <ReactTable
+                            data={contracts}
+                            columns={this.getColumn()}
+                            className="-striped -highlight"
+                            defaultPageSize={5}
+                            loading={this.state.loading}
+                            LoadingComponent={() => this.state.loading ? <ProcessBar /> : null}
+                        />
                     </div>
-                    <If condition={this.state.setShow} component={ModalAdder} props={{
-                        onHide: this.handleClose,
-                        show: this.state.setShow,
-                        onAdd: this.onAdd,
-                        data: this.state.adding,
-                    }} />
-                    <If condition={this.state.setShow2} component={ModalEditor} props={{
-                        onHide: this.handleClose,
-                        show: this.state.setShow2,
-                        onEdit: this.onEdit,
-                        data: this.state.editting,
-                    }} />
-                    <If condition={this.state.showVerify} component={ModalVerify} props={{
-                        onHide: this.handleClose,
-                        show: this.state.showVerify,
-                        onVerify: this.onVerify
-                    }} />
+                    <div className='UserProfile__page--profile'>
+                        <div className="container">
+                            <h1>PROFILE</h1>
 
-                </Fragment>
+                            <div>
+                                <Avatar size={64} icon="user" />
+                                <h5 ><strong id="user-name">{user.username}</strong></h5>
+                                <p id="user-frid">{user.address || 'Address'} </p>
+                                <p id="user-email">{user.email}</p>
+                                <p ><strong>A/C status: </strong><span className="tags" id="user-status">Active</span></p>
+                                <p ><strong>Job role</strong></p>
+                                <p id="user-role">user</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <If condition={this.state.setShow} component={ModalAdder} props={{
+                    onHide: this.handleClose,
+                    show: this.state.setShow,
+                    onAdd: this.onAdd,
+                    data: this.state.adding,
+                }} />
+                <If condition={this.state.setShow2} component={ModalEditor} props={{
+                    onHide: this.handleClose,
+                    show: this.state.setShow2,
+                    onEdit: this.onEdit,
+                    data: this.state.editting,
+                }} />
+                <If condition={this.state.showVerify} component={ModalVerify} props={{
+                    onHide: this.handleClose,
+                    show: this.state.showVerify,
+                    onVerify: this.onVerify
+                }} />
                 <AlertMessage
                     open={this.state.MessageOpen}
                     text={this.state.MessageText}
