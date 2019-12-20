@@ -10,7 +10,7 @@ export default function ModalEditor(props) {
         <div className="modal_EditContract">
             <Modal show={show} onHide={() => onHide()}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add A Counterpart</Modal.Title>
+                    <Modal.Title>Edit Contract</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>Contract Name</p>
