@@ -11,7 +11,7 @@ const { PROD_URI, DEV_URI } = require("./constants");
 const { userRouter, gridRouter, emailRouter, contractRouter, verifyRouter } = require("./routes/index");
 
 const app = express();
-mongoose.connect(DEV_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err) => {
+mongoose.connect(PROD_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (err) => {
     if (!err) console.log("Connected to MongoDB");
     else console.log("Error connecting:", err);
 });
