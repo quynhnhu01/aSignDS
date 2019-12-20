@@ -26,14 +26,9 @@ class UserProfilePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showAddEmail: false,
-            showEditContract: false,
             setShow2: false,
             setShow: false,
             showVerify: false,
-            counterpartEmail: '',
-            id: 0,
-            index: 0,
             contracts: [],
             user: {},
             editting: {},
@@ -47,7 +42,6 @@ class UserProfilePage extends Component {
     }
     static contextType = AuthContext;
     async componentDidMount() {
-        console.log("componentDidMount");
         const { user } = this.context;
         if (user) {
             const token = user.token;
@@ -76,37 +70,17 @@ class UserProfilePage extends Component {
     }
 
     handleEdit = (member, contract) => {
-        console.log("handleEdit", member, contract);
         this.setState({ setShow2: true, editting: { member, contract } });
     }
 
     handleAdd = (contract, email) => {
         this.setState({ setShow: true, adding: contract });
-        console.log("add new user to contract", contract.nameContract, email);
-
     }
 
     handleClose = () => {
         this.setState({ setShow: false, setShow2: false, showVerify: false })
     }
 
-    handleShow = (id) => {
-        this.setState({ setShow: true, id })
-    }
-
-    handleChangeEmail = (e) => {
-        const id = this.state.id;
-        const newData = [...this.state.data];
-        newData[id - 1].Email = e.target.value
-        this.setState({ data: newData })
-    }
-
-    handleChange = (e) => {
-        const { index, contracts } = this.state;
-        const newContracts = [...contracts];
-        newContracts[index][e.target.name] = e.target.value;
-        this.setState({ contracts: newContracts })
-    }
     handleView = async (contract) => {
         axios(`${CONSTANTS.ENDPOINT.CONTRACT}/${contract._id}`, {
             responseType: "blob",
@@ -133,16 +107,6 @@ class UserProfilePage extends Component {
                 });
             })
     }
-    handleAddPartner = async () => {
-        const id = this.state.id;
-        const newData = [...this.state.data];
-        console.log(newData[id - 1].Email);
-        // const response = await axios.post(CONSTANTS.ENDPOINT.ADDPARTNER, {
-        //     // file: pdf
-        // });
-        this.setState({ setShow: false })
-
-    };
     handleCloseAlert = () => {
         this.setState({ MessageOpen: false, MessageText: '' })
     }
@@ -263,18 +227,18 @@ class UserProfilePage extends Component {
 
                         </div>
                     </div>
-                    {this.state.setShow ? <ModalAdder
-                        show={this.state.setShow}
-                        data={this.state.adding}
-                        onHide={this.handleClose}
-                        onAdd={this.onAdd}
-                    /> : null}
-                    {this.state.setShow2 ? <ModalEditor
-                        show={this.state.setShow2}
-                        data={this.state.editting}
-                        onHide={this.handleClose}
-                        onEdit={this.onEdit}
-                    /> : null}
+                    <If condition={this.state.setShow} component={ModalAdder} props={{
+                        onHide: this.handleClose,
+                        show: this.state.setShow,
+                        onAdd: this.onAdd,
+                        data: this.state.adding,
+                    }} />
+                    <If condition={this.state.setShow2} component={ModalEditor} props={{
+                        onHide: this.handleClose,
+                        show: this.state.setShow2,
+                        onEdit: this.onEdit,
+                        data: this.state.editting,
+                    }} />
                     <If condition={this.state.showVerify} component={ModalVerify} props={{
                         onHide: this.handleClose,
                         show: this.state.showVerify,
