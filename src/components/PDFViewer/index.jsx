@@ -6,12 +6,14 @@ import axios from 'axios';
 import CONSTANTS from '../../constants';
 import Aux from '../../HOC/auxiliary';
 import SaveIcon from '@material-ui/icons/Save';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 import { AuthContext } from '../../contexts/auth.context'
 import Axios from 'axios';
+import AlertMessage from '../AlertMessage';
+
+import ModalAdder from '../Modal/ModalAdd';
 function configInstance(instance, file, isSigned) {
     instance.loadDocument(file, file.filename);
     instance.enableElements(['leftPanel', 'leftPanelButton']);
@@ -46,7 +48,10 @@ class PDFJSExpressViewer extends Component {
             showVerify: false,
             verifyCode: '',
             isSigned: false,
-            contract: null
+            contract: null,
+            MessageType: 'warning',
+            MessageText: '',
+            MessageOpen: false,
         };
         this.instance = null;
         this.docViewer = null;
@@ -164,21 +169,32 @@ class PDFJSExpressViewer extends Component {
         }
     };
 
-    handleAddPartner = async (partner) => {
-        console.log(partner);
-        const response = await axios.post(CONSTANTS.ENDPOINT.ADDPARTNER, {
-            // file: pdf
-        });
-        console.log("response: " + JSON.stringify(response));
-
-        this.setState({ setShow: false })
-
-    };
     handleAddAnother = () => {
         this.instance.closeDocument().then(() => {
             console.log('closeDocument');
             this.setState({ uploaded: false, isLoaded: false, contract: null });
         })
+    }
+    handleCloseAlert = () => {
+        this.setState({ MessageOpen: false, MessageText: '' })
+    }
+    onAdd = async (contractId, email) => {
+        try {
+            console.log("call add user to contract", contractId, email);
+            const response = await Axios.get(`${CONSTANTS.ENDPOINT.MAIL}/invite/${contractId}&${email}`, {
+                headers: {
+                    authorization: `Bearer ${this.context.user.token}`,
+                }
+            });
+            if (response.data) {
+                this.setState({ MessageOpen: true, MessageText: response.data.message, MessageType: 'success' });
+            }
+        } catch (error) {
+            console.log("error add", error);
+
+            this.setState({ MessageOpen: true, MessageText: error.response.data.message });
+
+        }
     }
     render() {
         const { classes } = this.props;
@@ -200,14 +216,14 @@ class PDFJSExpressViewer extends Component {
                                 variant="contained"
                                 startIcon={<CloudUploadIcon />}
                                 onClick={() => this.handleAddAnother()}>New
-                                 </Button>
-                            <Button
+                            </Button>
+                            {this.state.contract && <Button
                                 className={classes.button}
                                 variant="contained"
                                 startIcon={<AddIcon />}
                                 color="primary"
                                 onClick={this.handleShow} >Add Partner
-                                 </Button>
+                            </Button>}
                             <Button
                                 className={classes.button}
                                 variant="contained"
@@ -215,79 +231,21 @@ class PDFJSExpressViewer extends Component {
                                 color="primary"
                                 startIcon={<SaveIcon />}
                             >Save</Button>
-                            <Button
-                                className={classes.button}
-                                variant="contained"
-                                onClick={this.handleShowVerify}
-                                color="primary"
-                                startIcon={<VerifiedUserIcon />}
-                            >Verify</Button>
                         </Aux>
                         : null}
-
-
+                {this.state.setShow ? <ModalAdder
+                    show={this.state.setShow}
+                    data={this.state.contract}
+                    onHide={this.handleClose}
+                    onAdd={this.onAdd}
+                /> : null}
                 <div style={{ height: '85vh' }} ref={this.viewer}> </div>
-
-                <div className="modal__AddEmail">
-                    <Modal show={this.state.setShow} onHide={this.handleClose}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Add A Counterpart</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Enter Couterpart Email</p>
-                            <input
-                                className="email"
-                                type="text"
-                                placeholder="Example: abc@gmail.com"
-                                onChange={this.handleChangeEmail}
-                            />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={this.handleClose}>
-                                Close
-                        </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => this.handleAddPartner(this.state.counterpartEmail)}>
-                                Save Changes
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </div>
-                <div className="modal__AddEmail">
-                    <Modal show={this.state.showVerify} onHide={this.handleCloseVerify}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Add A Verify Code</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Enter Code </p>
-                            <input
-                                className="email"
-                                type="text"
-                                placeholder="Example: AB!@#$123"
-                                onChange={this.handleChangeVerifyCode}
-                            />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={this.handleCloseVerify}>
-                                Close
-                        </Button>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={() => this.handleVerify(this.state.verifyCode)}>
-                                Verify
-                        </Button>
-                        </Modal.Footer>
-                    </Modal>
-                </div>
+                <AlertMessage
+                    open={this.state.MessageOpen}
+                    text={this.state.MessageText}
+                    onClose={this.handleCloseAlert}
+                    type={this.state.MessageType}
+                />
             </div>
         )
     }

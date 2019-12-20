@@ -3,21 +3,21 @@ import { Modal } from 'react-bootstrap';
 import Button from '@material-ui/core/Button';
 import './index.scss';
 import { Input } from 'antd';
-export default function ModalAdder(props) {
-    const { show, onHide, data, onAdd } = props;
-    const [partnerEmail, setpartnerEmail] = useState('');
+export default function ModalVerify(props) {
+    const { show, onHide, onVerify } = props;
+    const [code, setcode] = useState('');
     return (
-        <div className="modal__AddEmail">
+        <div className="modal__Verify">
             <Modal show={show} onHide={onHide}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add A Counterpart</Modal.Title>
+                    <Modal.Title>Verify</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Enter Couterpart Email</p>
+                    <p>Enter Code</p>
                     <Input
                         className="email"
                         type="text"
-                        onChange={(e) => setpartnerEmail(e.target.value)}
+                        onChange={(e) => setcode(e.target.value)}
                     />
                 </Modal.Body>
                 <Modal.Footer>
@@ -31,10 +31,12 @@ export default function ModalAdder(props) {
                         variant="contained"
                         color="primary"
                         onClick={() => {
-                            onAdd(data._id, partnerEmail);
+                            console.log(code);
+                            
+                            onVerify(code);
                             onHide();
                         }}>
-                        Add
+                        Verify
                     </Button>
                 </Modal.Footer>
             </Modal>

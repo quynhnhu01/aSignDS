@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import Button from '@material-ui/core/Button';
+
 import './index.scss';
 import { Input } from 'antd';
 
@@ -43,13 +45,19 @@ export default function ModalEditor(props) {
                     />
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => onHide()}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => onHide()}>
                         Close
                         </Button>
-                    <Button variant="primary" onClick={() => {
-                        onHide();
-                        onEdit(data.contract._id, { nameContract: contractName });
-                    }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            onHide();
+                            onEdit(data.contract._id, { nameContract: contractName });
+                        }}>
                         Save
                         </Button>
                 </Modal.Footer>

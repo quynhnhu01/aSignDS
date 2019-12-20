@@ -12,7 +12,11 @@ import ModalEditor from '../Modal/ModalEdit';
 import ModalAdder from '../Modal/ModalAdd';
 import Aux from '../../HOC/auxiliary';
 import Axios from 'axios';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import Button from '@material-ui/core/Button';
+import If from '../../helpers/If';
 import { withRouter } from 'react-router-dom'
+import ModalVerify from '../Modal/ModalVerify';
 
 const ProcessBar = props => (
     <div className='-loading -active'>
@@ -26,6 +30,7 @@ class UserProfilePage extends Component {
             showEditContract: false,
             setShow2: false,
             setShow: false,
+            showVerify: false,
             counterpartEmail: '',
             id: 0,
             index: 0,
@@ -82,13 +87,11 @@ class UserProfilePage extends Component {
     }
 
     handleClose = () => {
-        this.setState({ setShow: false, setShow2: false, id: 0, index: 0 })
-        console.log(this.state.id)
+        this.setState({ setShow: false, setShow2: false, showVerify: false })
     }
 
     handleShow = (id) => {
         this.setState({ setShow: true, id })
-        console.log(this.state.id)
     }
 
     handleChangeEmail = (e) => {
@@ -187,9 +190,11 @@ class UserProfilePage extends Component {
             })
         }
     }
+    handleShowVerify = () => {
+        this.setState({ showVerify: true })
+    }
     onAdd = async (contractId, email) => {
         try {
-            console.log("call add user to contract", contractId, email);
             const response = await Axios.get(`${CONSTANTS.ENDPOINT.MAIL}/invite/${contractId}&${email}`, {
                 headers: {
                     authorization: `Bearer ${this.state.user.token}`,
@@ -200,9 +205,22 @@ class UserProfilePage extends Component {
             }
         } catch (error) {
             console.log("error add", error);
-
             this.setState({ MessageOpen: true, MessageText: error.response.data.message });
-
+        }
+    }
+    onVerify = async (code) => {
+        try {
+            const response = await Axios.get(`${CONSTANTS.ENDPOINT.VERIFY}/${code}`, {
+                headers: {
+                    authorization: `Bearer ${this.state.user.token}`,
+                }
+            });
+            if (response.data) {
+                this.setState({ MessageOpen: true, MessageText: response.data.message });
+            }
+        } catch (error) {
+            console.log("error verify", error);
+            this.setState({ MessageOpen: true, MessageText: error.response.data.message });
         }
     }
     render() {
@@ -210,6 +228,12 @@ class UserProfilePage extends Component {
         return (
             <Aux>
                 <Fragment>
+                    <Button
+                        variant="contained"
+                        onClick={() => this.handleShowVerify()}
+                        color="primary"
+                        startIcon={<VerifiedUserIcon />}
+                    >Verify</Button>
                     <div className='UserProfile__page'>
                         <div className='UserProfile__page--table'>
                             <h1>CONTRACT</h1>
@@ -251,6 +275,11 @@ class UserProfilePage extends Component {
                         onHide={this.handleClose}
                         onEdit={this.onEdit}
                     /> : null}
+                    <If condition={this.state.showVerify} component={ModalVerify} props={{
+                        onHide: this.handleClose,
+                        show: this.state.showVerify,
+                        onVerify: this.onVerify
+                    }} />
 
                 </Fragment>
                 <AlertMessage
