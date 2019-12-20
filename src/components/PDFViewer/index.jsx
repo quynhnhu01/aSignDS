@@ -120,8 +120,18 @@ class PDFJSExpressViewer extends Component {
                     })
                         .then(response => {
                             console.log("response save contract", response.data);
+                            this.setState({
+                                MessageOpen: true,
+                                MessageText: "Successfully saved",
+                                MessageType: 'success',
+                                contract: response.data.data
+                            });
+
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => {
+                            console.log(error);
+                            this.setState({ MessageOpen: true, MessageText: "Error saving contract", MessageType: 'warning' });
+                        });
                 });
             }
             else { // update annotations for contract 
@@ -133,7 +143,12 @@ class PDFJSExpressViewer extends Component {
                         authorization: `Bearer ${this.context.user.token}`
                     }
                 });
-                console.log("response update annotations", response.data);
+                if (response.data)
+                    this.setState({
+                        MessageOpen: true,
+                        MessageText: "Successfully saved",
+                        MessageType: 'success',
+                    });
             }
         }
         else {
@@ -164,9 +179,7 @@ class PDFJSExpressViewer extends Component {
             }
         } catch (error) {
             console.log("error add", error);
-
             this.setState({ MessageOpen: true, MessageText: error.response.data.message });
-
         }
     }
     render() {
