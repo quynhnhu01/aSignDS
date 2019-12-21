@@ -18,7 +18,7 @@ import If from '../../helpers/If';
 import { withRouter } from 'react-router-dom'
 import ModalVerify from '../Modal/ModalVerify';
 
-const ProcessBar = props => (
+const ProcessBar = () => (
     <div className='-loading -active'>
         Loading...
     </div>)
