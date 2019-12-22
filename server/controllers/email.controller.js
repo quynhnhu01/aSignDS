@@ -2,9 +2,10 @@ const nodemailer = require('nodemailer');
 const userModel = require('../models/user.model');
 const contractModel = require('../models/contract.model');
 const verifyModel = require('../models/verify.model');
-
 const Validator = require('class-validator').Validator;
 const validator = new Validator();
+const user = process.env.MAIL_USERNAME;
+const password = process.env.MAIL_PASSWORD;
 async function sendMail(req, res) {
     try {
         const username = req.user.username;
@@ -23,15 +24,10 @@ async function sendMail(req, res) {
 
         //create verify code 6 number
         const code = Math.floor(100000 + Math.random() * 900000);
-        const sender = await nodemailer.createTestAccount();
         const transporter = nodemailer.createTransport({
-            // host: 'aspmx.l.google.com',
-            // host: 'smtp.ethereal.email',
-            // port: 587,
-            // secure: false,
             auth: {
-                user: 'pxtpxt998@gmail.com',
-                pass: 'Aa01678441221',
+                user: user,
+                pass: password,
             },
             service: 'gmail',
         });
@@ -42,8 +38,9 @@ async function sendMail(req, res) {
             html: `<h1>Hello ${newPartner.username}, </h1>
                 <p> You are invited to join a new contract with ${owner.username}</p>
                 <p> Use this code to verify your invitation : <b> ${code} </b> </p>
-                <p> Go to <a href="http://localhost:3001/verify"> this page</a> and verify your invitation</p>
-                -------------------------------------------------------------------------------------------- </br>
+                <p> Please login to verify your invitation</p>
+                -------------------------------------------------------------------------------------------- 
+                </br>
                 <b> This email is automatically, please do not reply</b>
             `
         });
@@ -64,7 +61,6 @@ async function sendMail(req, res) {
         else throw new Error('Could not send email')
     } catch (error) {
         console.log("error", error);
-
         res.send({ message: error.message, error: error.name, success: false });
     }
 }

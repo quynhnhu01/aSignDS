@@ -15,7 +15,7 @@ function createToken(data) {
             resolve(token);
         });
     })
-};
+}
 
 async function isUserRegistered(user) {
     try {
@@ -30,7 +30,7 @@ async function isUserRegistered(user) {
     } catch (error) {
         console.log("error in isUserRegistered", error);
     }
-};
+}
 function comparePassword(password, hash) {
     return bcrypt.compare(password, hash);
 }
