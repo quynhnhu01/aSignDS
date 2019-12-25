@@ -1,5 +1,6 @@
 const verifyModel = require('../models/verify.model');
 const contractModel = require('../models/contract.model');
+const UserService = require('../services/user.service');
 async function verifyInvitation(req, res) {
     try {
         const code = req.params.code;
@@ -29,5 +30,20 @@ async function verifyInvitation(req, res) {
         return res.json({ message: error.message, error: error.name, success: false });
     }
 }
-const verifyController = { verifyInvitation };
+async function verifyDigitalSign(req, res) {
+    try {
+        const username = req.params.username;
+        const digitalSignature = req.params.digitalsign;
+        console.log("digitalSignature", digitalSignature);
+        let ds = decodeURIComponent(digitalSignature);
+        const isValid = await UserService.checkValidDS(username, ds);
+        console.log("is valid", isValid);
+
+        if (isValid) return res.send("Congrats! This document has been signed by " + username);
+        else return res.send("This document has not been signed, please contact your partner");
+    } catch (error) {
+
+    }
+}
+const verifyController = { verifyInvitation, verifyDigitalSign };
 module.exports = verifyController;
