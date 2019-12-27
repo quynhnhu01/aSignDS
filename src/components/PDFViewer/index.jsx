@@ -235,7 +235,6 @@ class PDFJSExpressViewer extends Component {
                             </Button>
                         </Aux>
                         : null}
-
                 <If condition={this.state.setShow} component={ModalAdder} props={{
                     show: this.state.setShow,
                     data: this.state.contract,
