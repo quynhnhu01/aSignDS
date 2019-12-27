@@ -23,7 +23,7 @@ class App extends Component {
                     <Redirect exact path="/" to="/about" />
                     <Route path="/about" component={About} />
                     <Redirect exact path="/" to="/upload" />
-                    <PrivateRoute path="/upload" render={(props) => <UploadPage {...props} />} />
+                    <PrivateRoute path="/upload" component={(props) => <UploadPage {...props} />} />
                     <Redirect exact path="/" to="/profile" />
                     <PrivateRoute path="/profile" component={UserProfilePage} />
                 </Switch>
